@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { IndexCollectionItem } from '@nuxt/content'
+import type { IndexRuCollectionItem } from '@nuxt/content'
 
 defineProps<{
-  page: IndexCollectionItem
+  page: IndexRuCollectionItem
 }>()
 </script>
 
@@ -18,6 +18,4 @@ defineProps<{
   />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

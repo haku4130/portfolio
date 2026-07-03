@@ -21,17 +21,11 @@ defineProps<{
       <div />
 
       <div class="flex flex-col gap-5">
-        <span
-          v-if="headline"
-          class="text-2xl font-medium text-primary-400"
-        >
+        <span v-if="headline" class="text-2xl font-medium text-primary-400">
           {{ headline }}
         </span>
 
-        <h1
-          v-if="title"
-          class="text-6xl font-bold text-highlighted"
-        >
+        <h1 v-if="title" class="text-6xl font-bold text-highlighted">
           {{ title }}
         </h1>
 

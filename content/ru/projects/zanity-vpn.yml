@@ -1,0 +1,6 @@
+title: ZanityVPN — Сервис продажи VPN
+description: Собственный VPN-сервис — от идеи до продакшена. Личный кабинет для управления подпиской, Telegram-бот для покупки и продления, автоматическая выдача конфигов. Полный цикл — архитектура, бэкенд, фронтенд, инфраструктура.
+image: /projects/zanity-vpn.png
+url: 'https://cabinet.zanity.net'
+tags: ['FastAPI', 'Nuxt', 'Telegram Bot', 'Docker', 'PostgreSQL']
+date: '2026'

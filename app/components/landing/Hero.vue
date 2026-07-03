@@ -1,11 +1,37 @@
 <script setup lang="ts">
-import type { IndexCollectionItem } from '@nuxt/content'
+import type { IndexRuCollectionItem } from '@nuxt/content'
 
 const { footer, global } = useAppConfig()
+const { t } = useI18n()
 
 defineProps<{
-  page: IndexCollectionItem
+  page: IndexRuCollectionItem
 }>()
+
+function downloadResume(lang: 'ru' | 'en') {
+  const link = document.createElement('a')
+  link.href = lang === 'en' ? '/resume-en.pdf' : '/resume-ru.pdf'
+  link.download =
+    lang === 'en' ? 'Andrey-Osipov-CV.pdf' : 'Андрей-Осипов-резюме.pdf'
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+}
+
+const resumeItems = computed(() => [
+  [
+    {
+      label: 'Русский',
+      icon: 'i-lucide-file-text',
+      onSelect: () => downloadResume('ru')
+    },
+    {
+      label: 'English',
+      icon: 'i-lucide-file-text',
+      onSelect: () => downloadResume('en')
+    }
+  ]
+])
 </script>
 
 <template>
@@ -33,11 +59,16 @@ defineProps<{
           delay: 0.1
         }"
       >
-        <UColorModeAvatar
-          class="size-18 ring ring-default ring-offset-3 ring-offset-bg"
-          :light="global.picture?.light!"
-          :dark="global.picture?.dark!"
+        <NuxtImg
+          :src="global.picture?.light!"
           :alt="global.picture?.alt!"
+          width="400"
+          height="400"
+          sizes="200px"
+          format="webp"
+          preload
+          fetchpriority="high"
+          class="size-50 rounded-full ring ring-default ring-offset-3 ring-offset-bg"
         />
       </Motion>
     </template>
@@ -103,21 +134,26 @@ defineProps<{
       >
         <div
           v-if="page.hero.links"
-          class="flex items-center gap-2"
+          class="flex flex-wrap items-center justify-center gap-2"
         >
           <UButton v-bind="page.hero.links[0]" />
           <UButton
             :color="global.available ? 'success' : 'error'"
             variant="ghost"
             class="gap-2"
+            :target="global.available ? '_blank' : ''"
             :to="global.available ? global.meetingLink : ''"
-            :label="global.available ? 'Available for new projects' : 'Not available at the moment'"
+            :label="
+              global.available ? t('hero.available') : t('hero.unavailable')
+            "
           >
             <template #leading>
               <span class="relative flex size-2">
                 <span
                   class="absolute inline-flex size-full rounded-full opacity-75"
-                  :class="global.available ? 'bg-success animate-ping' : 'bg-error'"
+                  :class="
+                    global.available ? 'bg-success animate-ping' : 'bg-error'
+                  "
                 />
                 <span
                   class="relative inline-flex size-2 scale-90 rounded-full"
@@ -133,7 +169,6 @@ defineProps<{
         <Motion
           v-for="(link, index) of footer?.links"
           :key="index"
-
           :initial="{
             scale: 1.1,
             opacity: 0,
@@ -154,15 +189,8 @@ defineProps<{
           />
         </Motion>
       </div>
-    </template>
 
-    <UMarquee
-      pause-on-hover
-      class="py-2 -mx-8 sm:-mx-12 lg:-mx-16 [--duration:40s]"
-    >
       <Motion
-        v-for="(img, index) in page.hero.images"
-        :key="index"
         :initial="{
           scale: 1.1,
           opacity: 0,
@@ -175,17 +203,24 @@ defineProps<{
         }"
         :transition="{
           duration: 0.6,
-          delay: index * 0.1
+          delay: 0.7
         }"
+        class="mt-4"
       >
-        <NuxtImg
-          width="234"
-          height="234"
-          class="rounded-lg aspect-square object-cover"
-          :class="index % 2 === 0 ? '-rotate-2' : 'rotate-2'"
-          v-bind="img"
-        />
+        <UDropdownMenu
+          :items="resumeItems"
+          :content="{ align: 'center' }"
+          :ui="{ content: 'w-40' }"
+        >
+          <UButton
+            color="neutral"
+            variant="outline"
+            icon="i-lucide-download"
+            trailing-icon="i-lucide-chevron-down"
+            :label="t('resume.download')"
+          />
+        </UDropdownMenu>
       </Motion>
-    </UMarquee>
+    </template>
   </UPageHero>
 </template>

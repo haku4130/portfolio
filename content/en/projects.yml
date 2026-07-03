@@ -1,0 +1,14 @@
+title: Projects I've built.
+description: Commercial web projects built entirely on my own — from architecture and backend to frontend and deployment.
+links:
+  - label: 'Get in touch'
+    color: 'neutral'
+    icon: 'i-simple-icons-telegram'
+    to: 'https://t.me/haku4130'
+    target: '_blank'
+  - label: 'GitHub'
+    color: 'neutral'
+    variant: 'outline'
+    icon: 'i-simple-icons-github'
+    to: 'https://github.com/haku4130'
+    target: '_blank'

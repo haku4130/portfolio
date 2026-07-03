@@ -1,7 +1,15 @@
 <script setup lang="ts">
-const { data: page } = await useAsyncData('projects-page', () => {
-  return queryCollection('pages').path('/projects').first()
-})
+const { locale, t } = useI18n()
+
+const { data: page } = await useAsyncData(
+  `projects-page-${locale.value}`,
+  () => {
+    return queryCollection(
+      locale.value === 'en' ? 'projectsPageEn' : 'projectsPageRu'
+    ).first()
+  },
+  { watch: [locale] }
+)
 if (!page.value) {
   throw createError({
     statusCode: 404,
@@ -10,14 +18,20 @@ if (!page.value) {
   })
 }
 
-const { data: projects } = await useAsyncData('projects', () => {
-  return queryCollection('projects').all()
-})
+const { data: projects } = await useAsyncData(
+  `projects-${locale.value}`,
+  () => {
+    return queryCollection(locale.value === 'en' ? 'projectsEn' : 'projectsRu')
+      .order('date', 'DESC')
+      .all()
+  },
+  { watch: [locale] }
+)
 
 const { global } = useAppConfig()
 
-const title = page.value?.seo?.title || page.value?.title
-const description = page.value?.seo?.description || page.value?.description
+const title = computed(() => page.value?.title)
+const description = computed(() => page.value?.description)
 
 useSeoMeta({
   title,
@@ -26,7 +40,10 @@ useSeoMeta({
   ogDescription: description
 })
 
-defineOgImage('Portfolio', { title, description })
+defineOgImage('Portfolio', {
+  title: title.value,
+  description: description.value
+})
 </script>
 
 <template>
@@ -42,19 +59,13 @@ defineOgImage('Portfolio', { title, description })
       }"
     >
       <template #links>
-        <div
-          v-if="page.links"
-          class="flex items-center gap-2"
-        >
+        <div v-if="page.links" class="flex items-center gap-2">
           <UButton
             :label="page.links[0]?.label"
             :to="global.meetingLink"
             v-bind="page.links[0]"
           />
-          <UButton
-            :to="`mailto:${global.email}`"
-            v-bind="page.links[1]"
-          />
+          <UButton :to="`mailto:${global.email}`" v-bind="page.links[1]" />
         </div>
       </template>
     </UPageHero>
@@ -75,6 +86,7 @@ defineOgImage('Portfolio', { title, description })
           :title="project.title"
           :description="project.description"
           :to="project.url"
+          target="_blank"
           orientation="horizontal"
           variant="naked"
           :reverse="index % 2 === 1"
@@ -89,22 +101,40 @@ defineOgImage('Portfolio', { title, description })
             </span>
           </template>
           <template #footer>
-            <ULink
-              :to="project.url"
-              class="text-sm text-primary flex items-center"
-            >
-              View Project
-              <UIcon
-                name="i-lucide-arrow-right"
-                class="size-4 text-primary transition-all opacity-0 group-hover:translate-x-1 group-hover:opacity-100"
-              />
-            </ULink>
+            <div class="flex flex-col gap-3">
+              <div v-if="project.tags?.length" class="flex flex-wrap gap-1.5">
+                <UBadge
+                  v-for="tag in project.tags"
+                  :key="tag"
+                  :label="tag"
+                  color="neutral"
+                  variant="subtle"
+                  size="sm"
+                />
+              </div>
+              <ULink
+                :to="project.url"
+                target="_blank"
+                class="text-sm text-primary flex items-center"
+              >
+                {{ t('projects.view') }}
+                <UIcon
+                  name="i-lucide-arrow-right"
+                  class="size-4 text-primary transition-all opacity-0 group-hover:translate-x-1 group-hover:opacity-100"
+                />
+              </ULink>
+            </div>
           </template>
-          <img
+          <NuxtImg
             :src="project.image"
             :alt="project.title"
+            width="800"
+            height="384"
+            sizes="(max-width: 640px) 100vw, 50vw"
+            format="webp"
+            loading="lazy"
             class="object-cover w-full h-48 rounded-lg"
-          >
+          />
         </UPageCard>
       </Motion>
     </UPageSection>

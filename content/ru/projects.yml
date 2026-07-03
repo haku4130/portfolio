@@ -1,0 +1,14 @@
+title: Проекты, которые я разработал.
+description: Коммерческие веб-проекты, реализованные полностью самостоятельно — от архитектуры и бэкенда до фронтенда и деплоя.
+links:
+  - label: 'Написать мне'
+    color: 'neutral'
+    icon: 'i-simple-icons-telegram'
+    to: 'https://t.me/haku4130'
+    target: '_blank'
+  - label: 'GitHub'
+    color: 'neutral'
+    variant: 'outline'
+    icon: 'i-simple-icons-github'
+    to: 'https://github.com/haku4130'
+    target: '_blank'

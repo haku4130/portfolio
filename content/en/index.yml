@@ -1,0 +1,233 @@
+seo:
+  title: 'Andrey Osipov — Python Backend Developer'
+  description: 'Portfolio of Andrey Osipov — a Python backend developer based in Moscow. Experienced with Django, FastAPI, PostgreSQL, Redis, Docker and high-load systems.'
+title: "Hi, I'm Andrey Osipov — Python Backend Developer"
+description: "I build reliable backend services and web applications.\n3+ years of commercial experience with Django, FastAPI, PostgreSQL and Docker."
+hero:
+  links:
+    - label: 'My projects'
+      to: /projects
+      color: 'neutral'
+      trailingIcon: 'i-lucide-arrow-right'
+about:
+  title: 'About me'
+  description: |
+    Python backend developer with 3+ years of commercial experience. I specialize in Django/DRF and FastAPI, work with high-load systems, optimize queries and set up CI/CD.
+    On the side, I build full-cycle commercial websites — from architecture to deployment — with Nuxt and FastAPI.
+experience:
+  title: Work experience
+  items:
+    - position: 'Python Developer'
+      date: '02.2026 — Present'
+      summary: 'Highload services for transport-safety systems: working with terabyte-scale data and internal tools under NDA.'
+      details:
+        - 'Designed and shipped an aggregated collection on top of the main multi-terabyte MongoDB database: consolidated data from many disparate collections into a single complete model — removing the need to assemble it from dozens of collections on every request.'
+        - 'Built from scratch (backend + frontend) a Git-style state-versioning system for the main service: change tracking, state diffs, stable versions, and history visualized as a graph.'
+        - 'Modernizing legacy services by rewriting them in FastAPI: improving performance and reducing technical debt.'
+        - 'Working with sensitive systems under NDA — strict security and code-quality requirements, resonating with my information-security specialization (MEPHI).'
+      stack: ['Python', 'FastAPI', 'MongoDB', 'Docker']
+      company:
+        name: Innovation Center «Safe Transport»
+        logo: '/logos/ict.png'
+        url: 'https://ictransport.ru/'
+        color: '#7c3aed'
+    - position: 'Full-stack Developer'
+      date: '09.2025 — 02.2026'
+      summary: 'Single-handedly designed and shipped a B2B vendor-matching platform — from architecture to production.'
+      details:
+        - 'Designed and single-handedly shipped a B2B platform to production: companies post projects with requirements, and the system surfaces the most relevant vendors. Sole owner of the product — from DB schema to UI and deployment.'
+        - 'Built the product''s core — the vendor matching and ranking logic based on project requirements.'
+        - 'Developed the backend on FastAPI/DRF with PostgreSQL; offloaded heavy operations (analytics generation, etc.) to Celery background tasks.'
+        - 'Integrated external APIs and a notification system, automating key user flows.'
+        - 'Built the frontend on Nuxt (Vue) and set up CI/CD (GitHub Actions) with Docker deployment — with no separate frontend developer.'
+      stack:
+        ['Nuxt', 'FastAPI', 'DRF', 'PostgreSQL', 'Celery', 'Docker', 'GitHub Actions']
+      company:
+        name: VendorHub LLC
+        logo: '/logos/vendorhub.png'
+        url: 'https://vendorfind.ru'
+        color: '#1a73e8'
+    - position: 'Python Developer'
+      date: '09.2024 — 08.2025'
+      summary: 'Highload backend for a video platform: performance, reliability, and security of services in a microservice architecture.'
+      details:
+        - 'Cut p95 latency of key APIs from ~1 s to <100 ms — Redis caching, ORM query rework, and indexes; services ran in a horizontally scaled environment (~100 RPS per instance).'
+        - 'Rewrote heavy SQL queries (>10 minutes in production) using CTEs and window functions — execution time dropped to seconds, easing database load.'
+        - 'Established a testing culture: migrated services to pytest, raised coverage from below 50%, and set up distributed CI/CD.'
+        - 'Ran a security audit of the services: fixed SQL injections and other vulnerabilities — at the intersection of backend and my information-security specialization (MEPHI).'
+        - 'Standardized API contracts (OpenAPI 3.0 via drf-spectacular) and unified the Docker build — simplifying integration across a 15-engineer team, and adopted the uv package manager.'
+      stack: ['Python', 'Django', 'DRF', 'FastAPI', 'aiohttp', 'PostgreSQL', 'Redis']
+      company:
+        name: RUTUBE
+        logo: '/logos/rutube.png'
+        url: 'https://rutube.ru'
+        color: '#e62117'
+    - position: 'Python Developer'
+      date: '05.2023 — 08.2024'
+      summary: 'Backend and full-cycle development of corporate web projects: e-commerce, landing pages, informational sites.'
+      details:
+        - 'Built the backend of 4 corporate web projects (e-commerce, landing pages, informational sites) with Python/Django and PostgreSQL — all shipped to production.'
+        - 'Automated customer-request handling: server-side form processing with DB storage and instant notifications — cut the business''s response time from several hours to 1–2 minutes.'
+        - 'Integrated third-party services — payment gateways, web analytics, and email services.'
+        - 'Set up production infrastructure: hosting, domains, and SSL certificates (HTTPS).'
+        - 'Optimized site load and response times (caching, SQL-query and static-asset optimization) and built responsive interfaces (HTML/CSS/JavaScript).'
+      stack: ['Python', 'Django', 'PostgreSQL', 'JavaScript']
+      company:
+        name: PSK NPO Mashinostroyeniya
+        logo: '/logos/psk.png'
+        url: 'https://www.psknpomash.ru/'
+        color: '#64748b'
+    - position: 'Full-stack Developer'
+      date: '2023 — Present'
+      summary: 'Turnkey commercial websites and web stores — solo, from design to production.'
+      details:
+        - 'ters.gallery — a furniture online store (Django/DRF + Nuxt): catalog, cart, checkout. Live in production and generating revenue.'
+        - 'I run every project solo: backend, frontend, infrastructure, and deployment.'
+        - 'Also corporate sites and landing pages: estvel.ru, metamorphosis.moscow (closed), maison-stroy.ru.'
+      stack: ['Nuxt', 'FastAPI', 'DRF', 'PostgreSQL', 'Celery', 'Docker']
+      company:
+        name: Freelance
+        logo: 'i-lucide-code-2'
+        color: '#16a34a'
+education:
+  title: Education
+  description: Learning and growing in information security and software development.
+  items:
+    - date: '2025 — 2027'
+      degree: "Master's, Information Security"
+      institution: 'MEPHI (National Research Nuclear University)'
+      url: 'https://mephi.ru'
+      logo: '/logos/mephi.png'
+    - date: '2021 — 2025'
+      degree: "Bachelor's, Information Security"
+      institution: 'MEPHI (National Research Nuclear University)'
+      url: 'https://mephi.ru'
+      logo: '/logos/mephi.png'
+    - date: '2023'
+      degree: 'Intensive coding school'
+      institution: 'School 21'
+      url: 'https://21-school.ru'
+      logo: '/logos/school21.png'
+stack:
+  title: Tech stack
+  description: The tools I work with every day.
+  items:
+    - name: Python
+      icon: 'i-simple-icons-python'
+      color: '#3776AB'
+    - name: Django
+      icon: 'i-simple-icons-django'
+      color: '#44B78B'
+    - name: FastAPI
+      icon: 'i-simple-icons-fastapi'
+      color: '#009688'
+    - name: PostgreSQL
+      icon: 'i-simple-icons-postgresql'
+      color: '#4169E1'
+    - name: Redis
+      icon: 'i-simple-icons-redis'
+      color: '#FF4438'
+    - name: MongoDB
+      icon: 'i-simple-icons-mongodb'
+      color: '#47A248'
+    - name: SQLAlchemy
+      icon: 'i-simple-icons-sqlalchemy'
+      color: '#D71F00'
+    - name: Celery
+      icon: 'i-simple-icons-celery'
+      color: '#4C9C63'
+    - name: RabbitMQ
+      icon: 'i-simple-icons-rabbitmq'
+      color: '#FF6600'
+    - name: Kafka
+      icon: 'i-simple-icons-apachekafka'
+      color: '#8AB6D6'
+    - name: Docker
+      icon: 'i-simple-icons-docker'
+      color: '#2496ED'
+    - name: Kubernetes
+      icon: 'i-simple-icons-kubernetes'
+      color: '#326CE5'
+    - name: Nginx
+      icon: 'i-simple-icons-nginx'
+      color: '#16A34A'
+    - name: Elasticsearch
+      icon: 'i-simple-icons-elasticsearch'
+      color: '#43C6DB'
+    - name: Prometheus
+      icon: 'i-simple-icons-prometheus'
+      color: '#E6522C'
+    - name: Grafana
+      icon: 'i-simple-icons-grafana'
+      color: '#F46800'
+    - name: GitHub Actions
+      icon: 'i-simple-icons-githubactions'
+      color: '#2088FF'
+    - name: pytest
+      icon: 'i-simple-icons-pytest'
+      color: '#0A9EDC'
+    - name: Vue
+      icon: 'i-simple-icons-vuedotjs'
+      color: '#4FC08D'
+    - name: Nuxt
+      icon: 'i-simple-icons-nuxt'
+      color: '#00DC82'
+    - name: Claude AI
+      icon: 'i-simple-icons-claude'
+      color: '#D97757'
+testimonials:
+  - quote: 'Over a single year, Andrey grew into one of the most reliable developers on the team. He took on the optimization of our heavily loaded endpoints — dug in deep, introduced caching and rate limiting, and fixed the ORM queries. Response times on the key endpoints dropped to a steady 100 ms. In parallel, he brought order to the API documentation — documented 150+ endpoints and moved everything to OpenAPI 3.0. The Go and frontend teams felt the difference immediately. I recommend him without reservation.'
+    author:
+      name: 'Mikhail Korsakov'
+      description: 'Backend Tech Lead, RUTUBE'
+      avatar:
+        src: 'https://ui-avatars.com/api/?name=MK&size=80&background=1e1b4b&color=a5b4fc'
+  - quote: "I hired Andrey to build the ters.gallery furniture online store. He took on everything: from architecture and backend to frontend and deployment. There was no need to separately hire a designer, a backend developer and a frontend developer — Andrey handled it all himself, quickly and without any fuss. The site runs reliably and turns a profit, without a single complaint. I'll be coming back to him again."
+    author:
+      name: 'Harutyun Sogomonyan'
+      description: "Founder, Ter's"
+      avatar:
+        src: 'https://ui-avatars.com/api/?name=HS&size=80&background=7c2d12&color=fed7aa'
+  - quote: "Andrey built VendorHub from scratch — single-handedly designed the architecture, wrote the backend and frontend, and took the platform all the way to production. For a startup that's critical: there was no need to assemble a team and spend months hiring just to test a hypothesis. And the code quality and his approach are on par with far larger teams. Andrey doesn't just code to spec — he proposes solutions and thinks ahead."
+    author:
+      name: 'Donat Shishmaryov'
+      description: 'Founder, VendorHub'
+      avatar:
+        src: 'https://ui-avatars.com/api/?name=DS&size=80&background=065f46&color=6ee7b7'
+faq:
+  title: Frequently asked questions
+  description: A bit about how I work, what I think about technology, and how to work with me.
+  categories:
+    - title: Approach to work
+      questions:
+        - label: What does "good code" mean to you?
+          content: |
+            Code that another person — or myself — can understand painlessly six months later. To me, readability beats cleverness, explicit beats implicit, and tests are part of the job, not a "later." At RUTUBE I migrated more than 200 tests to pytest with parallelized runs in CI, so the pipeline wouldn't turn into a bottleneck. And documentation: I updated and documented 150+ endpoints in OpenAPI 3.0, because an API without clear docs is an API that's awkward for neighboring teams to use.
+        - label: Does your information security background help you?
+          content: |
+            Yes, and it's one of the things that sets me apart as a backend developer. I'm studying Information Security at MEPHI, and it shapes how I write code: I think about injections, insecure dependencies and validation at the design stage, not once an incident has already hit. At RUTUBE I closed real vulnerabilities — from SQL injections to insecure libraries. Security isn't a separate checkbox for me, it's part of doing development properly.
+        - label: Do you use AI in your development work?
+          content: |
+            Actively — as a tool, not a replacement for thinking. AI is great at speeding up routine work: boilerplate, tests, making sense of unfamiliar code, first drafts of documentation. But architectural decisions, reviews and responsibility for the outcome stay with me. I keep up with the evolution of AI tooling and know how to fit it into a workflow so it actually saves time rather than piling up technical debt.
+    - title: Technology
+      questions:
+        - label: Django or FastAPI — which do you choose?
+          content: |
+            It depends on the task. I reach for Django/DRF when I need a fast start with an admin panel, an ORM and a ready-made ecosystem — for example, products with a lot of CRUD and business logic. FastAPI — when async, speed and lightweight microservices with a clear API contract matter. At RUTUBE, by the way, both coexisted: a Django monolith and microservices on aiohttp/FastAPI. You pick the tool for the task, not the other way around.
+        - label: You're a backend developer, but you also do frontend. How come?
+          content: |
+            My main specialization is backend, and that's where I want to grow. But I can cover the full cycle: I built several commercial projects (vendorfind.ru, ters.gallery and others) entirely on my own — the architecture, the backend on FastAPI/Django, the frontend on Nuxt, and deployment. For a business that's convenient: one person instead of three. For me it's an understanding of how the whole system works, not just my half of it.
+        - label: Do you have experience with high-load systems?
+          content: |
+            Yes. At RUTUBE — optimizing heavily loaded API endpoints, caching, queues on RabbitMQ and Kafka, background tasks on Celery. At the Innovation Center «Safe Transport» I work with systems holding terabytes of data in MongoDB: here it's essential to think about indexes, volumes and the cost of every query. Infrastructure-wise — Docker, Kubernetes, Nginx, CI/CD on GitHub Actions and GitLab CI.
+    - title: Collaboration
+      questions:
+        - label: Are you open to job offers?
+          content: |
+            Yes, I'm considering interesting backend positions — especially where there are challenging problems, high load and room to grow. I'm looking for fully remote work worldwide. Reach out on Telegram [@haku4130](https://t.me/haku4130) or by email at a.osipov.code@gmail.com — my resume is [on hh.ru](https://hh.ru/resume/c7218ed5ff0f69ec950039ed1f4a7233554461).
+        - label: Do you take on website development projects?
+          content: |
+            Yes. I build turnkey commercial websites and web applications — from architecture design to deployment and support. Stack: Nuxt (Vue) on the frontend, FastAPI/Django + PostgreSQL on the backend, all in Docker. I can take a project on end to end or join an existing team on the backend.
+        - label: How can I get in touch with you?
+          content: |
+            The easiest way is Telegram: [@haku4130](https://t.me/haku4130). You can also email me at a.osipov.code@gmail.com. I usually reply within the day.

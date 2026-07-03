@@ -1,14 +1,16 @@
 <script setup lang="ts">
 const { footer } = useAppConfig()
+const { t } = useI18n()
+
+const credits = computed(
+  () => `${t('footer.credits')} • © ${new Date().getFullYear()}`
+)
 </script>
 
 <template>
-  <UFooter
-    class="z-10 bg-default"
-    :ui="{ left: 'text-muted text-xs' }"
-  >
+  <UFooter class="z-10 bg-default" :ui="{ left: 'text-muted text-xs' }">
     <template #left>
-      {{ footer.credits }}
+      {{ credits }}
     </template>
 
     <template #right>

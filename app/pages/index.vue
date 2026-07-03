@@ -1,7 +1,26 @@
 <script setup lang="ts">
-const { data: page } = await useAsyncData('index', () => {
-  return queryCollection('index').first()
-})
+const { locale } = useI18n()
+const { data: page } = await useAsyncData(
+  `index-${locale.value}`,
+  async () => {
+    const doc = await queryCollection(
+      locale.value === 'en' ? 'indexEn' : 'indexRu'
+    ).first()
+    if (!doc) return null
+    const { parseMarkdown } = await import('@nuxtjs/mdc/runtime')
+    await Promise.all(
+      doc.faq.categories.flatMap(category =>
+        category.questions.map(async question => {
+          question.content = (await parseMarkdown(
+            question.content
+          )) as unknown as string
+        })
+      )
+    )
+    return doc
+  },
+  { watch: [locale] }
+)
 if (!page.value) {
   throw createError({
     statusCode: 404,
@@ -22,15 +41,18 @@ useSeoMeta({
 <template>
   <UPage v-if="page">
     <LandingHero :page />
-    <UPageSection
-      :ui="{
-        container: 'pt-0! lg:grid lg:grid-cols-2 lg:gap-8'
-      }"
-    >
+    <UPageSection :ui="{ container: 'pt-0!' }">
       <LandingAbout :page />
+    </UPageSection>
+    <UPageSection :ui="{ container: 'pt-0!' }">
       <LandingWorkExperience :page />
     </UPageSection>
-    <LandingBlog :page />
+    <UPageSection :ui="{ container: 'pt-0!' }">
+      <LandingEducation :page />
+    </UPageSection>
+    <UPageSection :ui="{ container: 'pt-0!' }">
+      <LandingTechStack :page />
+    </UPageSection>
     <LandingTestimonials :page />
     <LandingFAQ :page />
   </UPage>
