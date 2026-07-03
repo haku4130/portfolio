@@ -19,6 +19,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile || true
 RUN pnpm rebuild esbuild sharp better-sqlite3 unrs-resolver vue-demi @parcel/watcher
 COPY . .
+ENV NODE_OPTIONS=--max-old-space-size=4096
 RUN pnpm run build
 
 # ---- runtime stage ----
