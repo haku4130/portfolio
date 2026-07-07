@@ -29,14 +29,14 @@ defineProps<{
         <p class="text-sm shrink-0">
           {{ item.date }}
         </p>
-        <USeparator class="flex-1" />
+        <USeparator class="flex-1 min-w-4" />
         <ULink
-          class="flex items-center gap-2 text-nowrap"
+          class="flex items-center gap-2 min-w-0"
           :to="item.url"
           target="_blank"
         >
-          <div class="flex flex-col items-end text-right">
-            <span class="text-highlighted font-medium text-sm">
+          <div class="flex flex-col items-end text-right min-w-0">
+            <span class="text-highlighted font-medium text-sm truncate max-w-full">
               {{ item.institution }}
             </span>
             <span class="text-xs text-muted">

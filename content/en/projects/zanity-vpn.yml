@@ -1,6 +1,6 @@
 title: ZanityVPN — VPN sales service
 description: My own VPN service — from idea to production. A personal dashboard for managing subscriptions, a Telegram bot for purchasing and renewals, and automatic config delivery. The full cycle — architecture, backend, frontend, infrastructure.
-image: /projects/zanity-vpn.png
+image: /projects/zanity-vpn.jpg
 url: 'https://cabinet.zanity.net'
 tags: ['FastAPI', 'Nuxt', 'Telegram Bot', 'Docker', 'PostgreSQL']
 date: '2026'

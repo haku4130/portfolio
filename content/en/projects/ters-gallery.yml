@@ -1,6 +1,6 @@
 title: ters.gallery — Furniture online store
 description: A furniture online store with a catalog, filtering, cart, and checkout. Built end to end — backend on Django/DRF, frontend on Nuxt.
-image: /projects/ters-gallery.png
+image: /projects/ters-gallery.jpg
 url: 'https://ters.gallery'
 tags: ['Nuxt', 'Django', 'DRF', 'PostgreSQL', 'Docker']
 date: '2024'

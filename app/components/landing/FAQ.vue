@@ -15,11 +15,26 @@ const items = computed(() => {
   })
 })
 
+// Вертикальные табы на маленьких экранах, горизонтальные — от sm и выше.
+// Читаем matchMedia напрямую после монтирования, чтобы не зависеть от
+// возможного ssrWidth-провайдера, который держит useMediaQuery на десктопе.
+const orientation = ref<'horizontal' | 'vertical'>('horizontal')
+
+onMounted(() => {
+  const mq = window.matchMedia('(max-width: 639px)')
+  const apply = () => {
+    orientation.value = mq.matches ? 'vertical' : 'horizontal'
+  }
+  apply()
+  mq.addEventListener('change', apply)
+  onScopeDispose(() => mq.removeEventListener('change', apply))
+})
+
 const ui = {
-  root: 'flex items-center gap-4 w-full',
+  root: 'flex flex-col items-stretch gap-4 w-full',
   list: 'relative flex bg-transparent dark:bg-transparent gap-2 px-0',
   indicator:
-    'absolute top-[4px] duration-200 ease-out focus:outline-none rounded-lg bg-elevated/60',
+    'absolute duration-200 ease-out focus:outline-none rounded-lg bg-elevated/60 sm:top-[4px]',
   trigger:
     'px-3 py-2 rounded-lg hover:bg-muted/50 data-[state=active]:text-highlighted data-[state=inactive]:text-muted',
   label: 'truncate'
@@ -36,7 +51,7 @@ const ui = {
       description: 'text-left mt-2 text-sm sm:text-md lg:text-sm text-muted'
     }"
   >
-    <UTabs :items orientation="horizontal" :ui>
+    <UTabs :key="orientation" :items :orientation :ui>
       <template #content="{ item }">
         <UAccordion
           trailing-icon="lucide:plus"

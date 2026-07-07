@@ -1,6 +1,6 @@
 title: VendorHub — B2B marketplace for vendors
 description: A B2B platform I built from scratch on my own. The full cycle — architecture, backend, frontend, deployment. The service connects vendors and buyers, offering personal dashboards, a catalog with filtering, and a request system.
-image: /projects/vendorhub.png
+image: /projects/vendorhub.jpg
 url: 'https://vendorfind.ru'
 tags: ['FastAPI', 'Nuxt', 'PostgreSQL', 'Celery', 'Docker']
 date: '2025'

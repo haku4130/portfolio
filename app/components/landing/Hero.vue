@@ -209,6 +209,7 @@ const resumeItems = computed(() => [
       >
         <UDropdownMenu
           :items="resumeItems"
+          :modal="false"
           :content="{ align: 'center' }"
           :ui="{ content: 'w-40' }"
         >

@@ -78,28 +78,30 @@ const sectionTitle = computed(() =>
           >
             <button
               type="button"
-              class="group w-full text-muted hover:text-default flex items-center justify-between gap-4 cursor-pointer transition-colors"
+              class="group w-full text-muted hover:text-default flex items-center justify-between gap-3 cursor-pointer transition-colors"
             >
               <p class="text-sm shrink-0">
                 {{ experience.date }}
               </p>
-              <USeparator class="flex-1" />
-              <span class="flex items-center gap-1 text-nowrap">
-                <span class="text-sm">
+              <USeparator class="flex-1 min-w-4" />
+              <span class="flex items-center gap-1 min-w-0">
+                <span class="text-sm shrink-0 hidden sm:inline">
                   {{ experience.position }}
                 </span>
                 <span
-                  class="inline-flex items-center gap-1"
+                  class="inline-flex items-center gap-1 min-w-0"
                   :style="{ color: experience.company.color }"
                 >
-                  <span class="font-medium">{{ experience.company.name }}</span>
+                  <span class="font-medium truncate">{{
+                    experience.company.name
+                  }}</span>
                   <img
                     v-if="experience.company.logo?.startsWith('/')"
                     :src="experience.company.logo"
                     :alt="experience.company.name"
-                    class="size-4 object-contain"
+                    class="size-4 object-contain shrink-0"
                   />
-                  <UIcon v-else :name="experience.company.logo" />
+                  <UIcon v-else :name="experience.company.logo" class="shrink-0" />
                 </span>
               </span>
             </button>

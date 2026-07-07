@@ -28,22 +28,27 @@ const pillClass =
 
 <template>
   <div
-    class="fixed top-2 sm:top-4 mx-auto left-1/2 transform -translate-x-1/2 z-10 flex items-stretch gap-2"
+    class="fixed top-2 sm:top-4 inset-x-0 z-10 flex justify-center px-2 pointer-events-none"
   >
-    <UNavigationMenu
-      :items="links"
-      variant="link"
-      color="neutral"
-      :class="[pillClass, 'items-center px-2 sm:px-4']"
-      :ui="{
-        link: 'px-2 py-1',
-        linkLeadingIcon: 'hidden'
-      }"
-    />
+    <div
+      class="flex items-stretch gap-2 pointer-events-none *:pointer-events-auto"
+    >
+      <UNavigationMenu
+        :items="links"
+        variant="link"
+        color="neutral"
+        :class="[pillClass, 'items-center px-2 sm:px-4']"
+        :ui="{
+          link: 'px-2 py-1',
+          linkLeadingIcon: 'size-5 sm:hidden',
+          linkLabel: 'hidden sm:inline'
+        }"
+      />
 
-    <div :class="[pillClass, 'flex items-center gap-1 px-2']">
-      <LanguageSwitcher />
-      <ColorModeButton />
+      <div :class="[pillClass, 'flex items-center gap-1 px-2']">
+        <LanguageSwitcher />
+        <ColorModeButton />
+      </div>
     </div>
   </div>
 </template>

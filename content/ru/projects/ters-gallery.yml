@@ -1,6 +1,6 @@
 title: ters.gallery — Интернет-магазин мебели
 description: Интернет-магазин мебели с каталогом, фильтрацией, корзиной и оформлением заказа. Разработан под ключ — бэкенд на Django/DRF, фронтенд на Nuxt.
-image: /projects/ters-gallery.png
+image: /projects/ters-gallery.jpg
 url: 'https://ters.gallery'
 tags: ['Nuxt', 'Django', 'DRF', 'PostgreSQL', 'Docker']
 date: '2024'

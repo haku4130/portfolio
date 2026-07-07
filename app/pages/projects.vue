@@ -92,7 +92,7 @@ defineOgImage('Portfolio', {
           :reverse="index % 2 === 1"
           class="group"
           :ui="{
-            wrapper: 'max-sm:order-last'
+            wrapper: 'max-lg:order-last'
           }"
         >
           <template #leading>
@@ -130,7 +130,7 @@ defineOgImage('Portfolio', {
             :alt="project.title"
             width="800"
             height="384"
-            sizes="(max-width: 640px) 100vw, 50vw"
+            sizes="100vw sm:50vw"
             format="webp"
             loading="lazy"
             class="object-cover w-full h-48 rounded-lg"
