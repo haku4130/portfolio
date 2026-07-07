@@ -32,3 +32,26 @@ jobs:
 
       - name: Typecheck
         run: pnpm run typecheck
+
+  deploy:
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    # Skip gracefully until the SSH secret is configured
+    env:
+      SSH_KEY: ${{ secrets.MSK3_SSH_KEY }}
+
+    steps:
+      - name: Deploy to msk3 over SSH
+        if: env.SSH_KEY != ''
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.MSK3_HOST }}
+          username: ${{ secrets.MSK3_USER }}
+          key: ${{ secrets.MSK3_SSH_KEY }}
+          script: |
+            set -e
+            cd ~/portfolio
+            git pull --ff-only origin main
+            docker compose up -d --build
