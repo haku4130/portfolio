@@ -1,62 +1,69 @@
-# Nuxt Portfolio Template
+# Portfolio — Andrey Osipov
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+Personal portfolio of a Python backend developer, live at **[aosipov.dev](https://aosipov.dev)**.
+Bilingual (Russian / English), content-driven, deployed as a Dockerized SSR app behind Traefik.
 
-Use this template to create your own portfolio with [Nuxt UI](https://ui.nuxt.com).
+## Tech stack
 
-- [Live demo](https://portfolio-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+- **[Nuxt 4](https://nuxt.com)** · Vue 3 · TypeScript
+- **[Nuxt UI 4](https://ui.nuxt.com)** · Tailwind CSS 4
+- **[Nuxt Content](https://content.nuxt.com)** — content-driven pages (YAML/Markdown)
+- **[@nuxtjs/i18n](https://i18n.nuxtjs.org)** — Russian & English
+- **[@nuxt/image](https://image.nuxt.com)** — on-the-fly AVIF/WebP via IPX
+- **nuxt-og-image** — generated social preview images
+- **motion-v** — animations
 
-<a href="https://portfolio-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/portfolio-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/portfolio-light.png">
-    <img alt="Nuxt Portfolio Template" src="https://ui.nuxt.com/assets/templates/nuxt/portfolio-light.png">
-  </picture>
-</a>
+## Features
 
-## Quick Start
+- Bilingual RU/EN with a language switcher (`prefix_except_default` routing)
+- Landing sections: hero, about, work experience (detail modals + auto-computed tenure), education, tech stack, testimonials, FAQ
+- Projects and About pages driven by localized content
+- Downloadable résumé (RU/EN PDF)
+- Dark / light mode, fully responsive, optimized images, SEO meta & OG images
 
-```bash [Terminal]
-npm create nuxt@latest -- -t ui/portfolio
+## Project structure
+
+```
+app/            # pages, components, layouts, composables
+content/
+  ru/           # Russian content (index, about, projects/*)
+  en/           # English content
+i18n/           # UI locale strings
+public/         # static assets, résumé PDFs, favicon
+content.config.ts   # Nuxt Content collections & schemas
+nuxt.config.ts
+Dockerfile          # multi-stage build for the SSR server
+docker-compose.yml  # service + Traefik labels
 ```
 
-## Deploy your own
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=portfolio&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fportfolio&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fportfolio-dark.png&demo-url=https%3A%2F%2Fportfolio-template.nuxt.dev%2F&demo-title=Nuxt%20Portfolio%20Template&demo-description=A%20sleek%20portfolio%20template%20to%20showcase%20your%20work%2C%20skills%20and%20blog%20powered%20by%20Nuxt%20Content.)
-
-## Setup
-
-Make sure to install the dependencies:
+## Development
 
 ```bash
 pnpm install
+pnpm dev          # http://localhost:3000
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
 
 ```bash
-pnpm dev
+pnpm lint         # ESLint
+pnpm typecheck    # nuxt typecheck (vue-tsc)
+pnpm build        # production build (.output)
+pnpm preview      # preview the production build
 ```
 
-## Production
+## Deployment
 
-Build the application for production:
+The app is a Node SSR server (`node .output/server/index.mjs`) packaged with the
+provided `Dockerfile` and published behind **Traefik**, which terminates TLS via
+Let's Encrypt.
+
+CI/CD ([GitHub Actions](.github/workflows/ci.yml)):
+
+1. On every push — run **lint** and **typecheck**.
+2. On push to `main` — SSH into the server and redeploy:
+   `git pull && docker compose up -d --build`.
+
+Manual deploy:
 
 ```bash
-pnpm build
+ssh <server> 'cd ~/portfolio && git pull && docker compose up -d --build'
 ```
-
-Locally preview production build:
-
-```bash
-pnpm preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
