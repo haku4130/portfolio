@@ -33,6 +33,12 @@ export default defineAppConfig({
         'aria-label': 'GitHub'
       },
       {
+        icon: 'i-simple-icons-linkedin',
+        to: 'https://www.linkedin.com/in/andrey-osipov-959863396',
+        target: '_blank',
+        'aria-label': 'LinkedIn'
+      },
+      {
         icon: 'i-simple-icons-telegram',
         to: 'https://t.me/haku4130',
         target: '_blank',
