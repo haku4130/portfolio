@@ -20,7 +20,7 @@ useHead({
 })
 
 useSeoMeta({
-  titleTemplate: '%s — Андрей Осипов',
+  titleTemplate: '%s – Андрей Осипов',
   twitterCard: 'summary_large_image'
 })
 </script>

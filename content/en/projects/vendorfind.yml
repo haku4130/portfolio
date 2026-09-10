@@ -1,6 +1,6 @@
-title: VendorHub — B2B marketplace for vendors
-description: A B2B platform I built from scratch on my own. The full cycle — architecture, backend, frontend, deployment. The service connects vendors and buyers, offering personal dashboards, a catalog with filtering, and a request system.
+title: VendorHub – B2B marketplace for vendors
+description: 'A B2B vendor-matching platform for company projects. I owned the server side: DB architecture, a REST API on FastAPI, a multi-factor vendor matching and ranking engine, and the road to production. The service connects vendors and buyers with a filterable catalog, profiles, and a request system.'
 image: /projects/vendorhub.jpg
 url: 'https://vendorfind.ru'
-tags: ['FastAPI', 'Nuxt', 'PostgreSQL', 'Celery', 'Docker']
+tags: ['FastAPI', 'SQLAlchemy', 'PostgreSQL', 'Redis', 'Celery', 'Docker']
 date: '2025'

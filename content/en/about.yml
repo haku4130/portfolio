@@ -1,21 +1,21 @@
 title: About Me
-description: Python backend developer from Moscow. A bit about my journey, my approach to work, and my education.
+description: Python backend developer from Belgrade. A bit about my journey, my approach to work, and my education.
 content: |
-  Hi, I'm Andrey Osipov — a Python backend developer from Moscow.
+  Hi, I'm Andrey Osipov – a Python backend developer from Belgrade.
 
-  I've been coding since 2021. Along the way I've worked at RUTUBE, the Innovation Center «Safe Transport», and PSK NPO Mashinostroyeniya, and I've also delivered several commercial fullstack projects on my own.
+  I've been coding since 2021. Along the way I've worked at RUTUBE, the Innovation Center «Safe Transport», and PSK SOFT LLC, and I've also delivered several commercial fullstack projects on my own.
 
   ### What I do
 
   My core specialization is **Python backend**: Django/DRF, FastAPI, PostgreSQL, Redis, Celery, Docker. I'm comfortable working with high-load systems: optimizing ORM queries, introducing caching, setting up monitoring with Prometheus/Grafana, and building CI/CD pipelines.
 
-  On the frontend I work with **Nuxt (Vue)** — enough to build commercial websites entirely on my own, from architecture to deployment.
+  On the frontend I work with **Nuxt (Vue)** – enough to build commercial websites entirely on my own, from architecture to deployment.
 
   ### Education
 
   I'm studying at **MEPHI (National Research Nuclear University)**, majoring in Information Security (master's, 2025–2027). I completed my bachelor's degree there in 2025. I also trained at **School 21 by Sber** (2023).
 
-  Security isn't just my field of study — it's a genuine interest: I follow the industry and understand threats at the code level.
+  Security isn't just my field of study – it's a genuine interest: I follow the industry and understand threats at the code level.
 
   ### Outside of work
 

@@ -1,4 +1,4 @@
-# Portfolio — Andrey Osipov
+# Portfolio – Andrey Osipov
 
 Personal portfolio of a Python backend developer, live at **[aosipov.dev](https://aosipov.dev)**.
 Bilingual (Russian / English), content-driven, deployed as a Dockerized SSR app behind Traefik.
@@ -7,11 +7,11 @@ Bilingual (Russian / English), content-driven, deployed as a Dockerized SSR app 
 
 - **[Nuxt 4](https://nuxt.com)** · Vue 3 · TypeScript
 - **[Nuxt UI 4](https://ui.nuxt.com)** · Tailwind CSS 4
-- **[Nuxt Content](https://content.nuxt.com)** — content-driven pages (YAML/Markdown)
-- **[@nuxtjs/i18n](https://i18n.nuxtjs.org)** — Russian & English
-- **[@nuxt/image](https://image.nuxt.com)** — on-the-fly AVIF/WebP via IPX
-- **nuxt-og-image** — generated social preview images
-- **motion-v** — animations
+- **[Nuxt Content](https://content.nuxt.com)** – content-driven pages (YAML/Markdown)
+- **[@nuxtjs/i18n](https://i18n.nuxtjs.org)** – Russian & English
+- **[@nuxt/image](https://image.nuxt.com)** – on-the-fly AVIF/WebP via IPX
+- **nuxt-og-image** – generated social preview images
+- **motion-v** – animations
 
 ## Features
 
@@ -58,8 +58,8 @@ Let's Encrypt.
 
 CI/CD ([GitHub Actions](.github/workflows/ci.yml)):
 
-1. On every push — run **lint** and **typecheck**.
-2. On push to `main` — SSH into the server and redeploy:
+1. On every push – run **lint** and **typecheck**.
+2. On push to `main` – SSH into the server and redeploy:
    `git pull && docker compose up -d --build`.
 
 Manual deploy:
