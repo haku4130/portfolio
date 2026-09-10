@@ -50,6 +50,7 @@ jobs:
           host: ${{ secrets.MSK3_HOST }}
           username: ${{ secrets.MSK3_USER }}
           key: ${{ secrets.MSK3_SSH_KEY }}
+          command_timeout: 30m
           script: |
             set -e
             cd ~/portfolio
