@@ -137,6 +137,35 @@ const axisLabels = computed(() => {
 })
 
 const showDots = computed(() => scaled.value.length <= 40)
+
+const hovered = ref<number | null>(null)
+
+const active = computed(() =>
+  hovered.value === null ? null : (hitAreas.value[hovered.value] ?? null)
+)
+
+const activePoint = computed(() =>
+  hovered.value === null ? null : (scaled.value[hovered.value] ?? null)
+)
+
+/**
+ * The svg keeps its aspect ratio, so a percentage of its box is the same
+ * fraction of the viewBox. That lets the tooltip triggers be ordinary elements
+ * laid over the chart instead of svg nodes, which is what UTooltip expects.
+ */
+function overlayStyle(area: { x: number, width: number }) {
+  return {
+    left: `${(area.x / WIDTH) * 100}%`,
+    width: `${(area.width / WIDTH) * 100}%`,
+    top: `${(PAD_TOP / HEIGHT) * 100}%`,
+    height: `${(INNER_HEIGHT / HEIGHT) * 100}%`
+  }
+}
+
+function setHovered(index: number, open: boolean) {
+  if (open) hovered.value = index
+  else if (hovered.value === index) hovered.value = null
+}
 </script>
 
 <template>
@@ -152,98 +181,142 @@ const showDots = computed(() => scaled.value.length <= 40)
       </span>
     </div>
 
-    <svg
-      :viewBox="`0 0 ${WIDTH} ${HEIGHT}`"
-      preserveAspectRatio="xMidYMid meet"
-      role="img"
-      aria-label="Динамика просмотров и уникальных посетителей"
-      class="w-full h-auto overflow-visible"
-    >
-      <g>
-        <line
-          v-for="line in gridLines"
-          :key="`grid-${line.value}`"
-          :x1="PAD_LEFT"
-          :x2="WIDTH - PAD_RIGHT"
-          :y1="line.y"
-          :y2="line.y"
-          class="stroke-default"
-          stroke-width="1"
-          vector-effect="non-scaling-stroke"
+    <div class="relative">
+      <svg
+        :viewBox="`0 0 ${WIDTH} ${HEIGHT}`"
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Динамика просмотров и уникальных посетителей"
+        class="block w-full h-auto overflow-visible"
+      >
+        <!-- Drawn first, so the highlight tints the column instead of hiding it. -->
+        <rect
+          v-if="active"
+          :x="active.x"
+          :y="PAD_TOP"
+          :width="active.width"
+          :height="INNER_HEIGHT"
+          class="fill-primary/10"
         />
+
+        <g>
+          <line
+            v-for="line in gridLines"
+            :key="`grid-${line.value}`"
+            :x1="PAD_LEFT"
+            :x2="WIDTH - PAD_RIGHT"
+            :y1="line.y"
+            :y2="line.y"
+            class="stroke-default"
+            stroke-width="1"
+            vector-effect="non-scaling-stroke"
+          />
+          <text
+            v-for="line in gridLines"
+            :key="`grid-label-${line.value}`"
+            :x="PAD_LEFT - 8"
+            :y="line.y + 3"
+            text-anchor="end"
+            class="fill-current text-dimmed text-[10px] tabular-nums"
+          >
+            {{ line.label }}
+          </text>
+        </g>
+
+        <path :d="viewsArea" class="fill-primary/10" />
+
+        <polyline
+          :points="viewsLine"
+          fill="none"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+          class="stroke-primary"
+        />
+
+        <polyline
+          :points="visitorsLine"
+          fill="none"
+          stroke-width="2"
+          stroke-dasharray="4 4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+          class="stroke-current text-dimmed"
+        />
+
+        <template v-if="showDots">
+          <circle
+            v-for="point in scaled"
+            :key="`dot-${point.date}`"
+            :cx="point.x"
+            :cy="point.viewsY"
+            r="2.5"
+            class="fill-primary"
+          />
+        </template>
+
+        <template v-if="activePoint">
+          <line
+            :x1="activePoint.x"
+            :x2="activePoint.x"
+            :y1="PAD_TOP"
+            :y2="BASE_Y"
+            class="stroke-primary/40"
+            stroke-width="1"
+            vector-effect="non-scaling-stroke"
+          />
+          <circle
+            :cx="activePoint.x"
+            :cy="activePoint.viewsY"
+            r="4"
+            class="fill-primary stroke-(--ui-bg)"
+            stroke-width="2"
+          />
+          <circle
+            :cx="activePoint.x"
+            :cy="activePoint.visitorsY"
+            r="4"
+            class="fill-current text-dimmed stroke-(--ui-bg)"
+            stroke-width="2"
+          />
+        </template>
+
         <text
-          v-for="line in gridLines"
-          :key="`grid-label-${line.value}`"
-          :x="PAD_LEFT - 8"
-          :y="line.y + 3"
-          text-anchor="end"
+          v-for="label in axisLabels"
+          :key="`axis-${label.x}`"
+          :x="label.x"
+          :y="HEIGHT - 8"
+          text-anchor="middle"
           class="fill-current text-dimmed text-[10px] tabular-nums"
         >
-          {{ line.label }}
+          {{ label.label }}
         </text>
-      </g>
+      </svg>
 
-      <path :d="viewsArea" class="fill-primary/10" />
-
-      <polyline
-        :points="viewsLine"
-        fill="none"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        vector-effect="non-scaling-stroke"
-        class="stroke-primary"
-      />
-
-      <polyline
-        :points="visitorsLine"
-        fill="none"
-        stroke-width="2"
-        stroke-dasharray="4 4"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        vector-effect="non-scaling-stroke"
-        class="stroke-current text-dimmed"
-      />
-
-      <template v-if="showDots">
-        <circle
-          v-for="point in scaled"
-          :key="`dot-${point.date}`"
-          :cx="point.x"
-          :cy="point.viewsY"
-          r="2.5"
-          class="fill-primary"
-        />
-      </template>
-
-      <g>
-        <rect
-          v-for="area in hitAreas"
-          :key="`hit-${area.date}`"
-          :x="area.x"
-          :y="PAD_TOP"
-          :width="area.width"
-          :height="INNER_HEIGHT"
-          fill="transparent"
-          class="hover:fill-(--ui-bg-elevated)"
-        >
-          <title>
-            {{ longDate(area.date) }} — просмотров: {{ area.views }}, уникальных: {{ area.visitors }}
-          </title>
-        </rect>
-      </g>
-
-      <text
-        v-for="label in axisLabels"
-        :key="`axis-${label.x}`"
-        :x="label.x"
-        :y="HEIGHT - 8"
-        text-anchor="middle"
-        class="fill-current text-dimmed text-[10px] tabular-nums"
+      <UTooltip
+        v-for="(area, index) in hitAreas"
+        :key="`hit-${area.date}`"
+        :delay-duration="0"
+        :content="{ side: 'top', sideOffset: 12 }"
+        :ui="{ content: 'h-auto flex-col items-start gap-1 py-2' }"
+        @update:open="open => setHovered(index, open)"
       >
-        {{ label.label }}
-      </text>
-    </svg>
+        <div class="absolute" :style="overlayStyle(area)" />
+
+        <template #content>
+          <span class="font-medium">{{ longDate(area.date) }}</span>
+          <span class="inline-flex items-center gap-1.5 tabular-nums text-muted">
+            <span class="size-2 rounded-full bg-primary" />
+            Просмотры: {{ numberFormat.format(area.views) }}
+          </span>
+          <span class="inline-flex items-center gap-1.5 tabular-nums text-muted">
+            <span class="size-2 rounded-full bg-(--ui-text-dimmed)" />
+            Уникальные: {{ numberFormat.format(area.visitors) }}
+          </span>
+        </template>
+      </UTooltip>
+    </div>
   </div>
 </template>

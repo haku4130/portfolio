@@ -32,20 +32,50 @@ const relative = useTimeAgo(() => props.ts, {
   updateInterval: 30_000
 })
 
-const absolute = computed(() => {
-  if (!Number.isFinite(props.ts)) return '—'
-  return new Intl.DateTimeFormat('ru-RU', {
-    dateStyle: 'short',
-    timeStyle: 'medium'
-  }).format(new Date(props.ts))
+const now = useNow({ interval: 60_000 })
+
+const valid = computed(() => Number.isFinite(props.ts))
+
+const time = new Intl.DateTimeFormat('ru-RU', { timeStyle: 'medium' })
+const dayAndTime = new Intl.DateTimeFormat('ru-RU', {
+  day: '2-digit',
+  month: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit'
 })
+const full = new Intl.DateTimeFormat('ru-RU', {
+  dateStyle: 'long',
+  timeStyle: 'medium'
+})
+
+function sameDay(a: Date, b: Date) {
+  return a.toDateString() === b.toDateString()
+}
+
+/**
+ * Exact local time, because a relative label alone is too coarse to tell events
+ * apart: everything between one and two hours old reads "час назад".
+ */
+const label = computed(() => {
+  if (!valid.value) return '—'
+
+  const date = new Date(props.ts)
+  return sameDay(date, now.value) ? time.format(date) : dayAndTime.format(date)
+})
+
+const tooltip = computed(() =>
+  valid.value ? `${full.format(new Date(props.ts))} · ${relative.value}` : ''
+)
 </script>
 
 <template>
-  <span :title="absolute" class="whitespace-nowrap tabular-nums">
-    <ClientOnly>
-      {{ relative }}
-      <template #fallback>{{ absolute }}</template>
-    </ClientOnly>
-  </span>
+  <ClientOnly>
+    <UTooltip :text="tooltip" :delay-duration="200">
+      <span class="whitespace-nowrap tabular-nums">{{ label }}</span>
+    </UTooltip>
+
+    <template #fallback>
+      <span class="whitespace-nowrap tabular-nums">{{ label }}</span>
+    </template>
+  </ClientOnly>
 </template>

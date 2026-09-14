@@ -14,6 +14,12 @@ const props = withDefaults(
     limit?: number
     empty?: string
     loading?: boolean
+    /**
+     * Number shown in the header. Defaults to the sum of the rows; pass it
+     * explicitly when the rows are a capped top list and the real figure lives
+     * on the server.
+     */
+    badge?: number
   }>(),
   {
     limit: 8,
@@ -44,6 +50,10 @@ const rows = computed(() =>
 )
 
 const hidden = computed(() => Math.max(0, props.items.length - props.limit))
+
+const badgeLabel = computed(() =>
+  numberFormat.format(props.badge ?? total.value)
+)
 </script>
 
 <template>
@@ -56,7 +66,7 @@ const hidden = computed(() => Math.max(0, props.items.length - props.limit))
         </h3>
         <UBadge
           v-if="items.length"
-          :label="numberFormat.format(total)"
+          :label="badgeLabel"
           color="neutral"
           variant="subtle"
           size="sm"

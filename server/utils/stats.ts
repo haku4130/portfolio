@@ -44,6 +44,8 @@ export interface Summary {
   referrers: Array<{ source: string | null, views: number }>
   countries: Array<{ country: string | null, views: number }>
   cities: Array<{ city: string | null, country: string | null, views: number }>
+  /** How many distinct values exist, not just the ones that fit in the top lists. */
+  distinct: { referrers: number, countries: number, cities: number }
   recent: RecentEvent[]
 }
 
@@ -104,6 +106,29 @@ function fillGaps(
   }
 
   return filled
+}
+
+/**
+ * Counts distinct groups the same way the top lists group them, so the header
+ * count matches the rows -- including the "unknown" group, which `COUNT(DISTINCT
+ * col)` would silently drop. The top lists are capped, so this cannot be
+ * derived on the client.
+ */
+function countDistinct(
+  db: Database.Database,
+  columns: string,
+  scope: readonly [number, number],
+  bot: string
+): number {
+  const row = db.prepare(`
+    SELECT COUNT(*) AS n FROM (
+      SELECT DISTINCT ${columns}
+      FROM events
+      WHERE type = 'pageview' AND ts > ? AND ts <= ?${bot}
+    )
+  `).get(...scope) as { n: number }
+
+  return row.n
 }
 
 export function buildSummary(
@@ -197,6 +222,12 @@ export function buildSummary(
       ORDER BY views DESC, city ASC
       LIMIT ?
     `).all(...scope, TOP_LIMIT) as Summary['cities'],
+
+    distinct: {
+      referrers: countDistinct(db, 'referrer', scope, bot),
+      countries: countDistinct(db, 'country', scope, bot),
+      cities: countDistinct(db, 'city, country', scope, bot)
+    },
 
     recent: db.prepare(`
       SELECT ts, type, label, path, country, city, referrer, device, browser, os, bot

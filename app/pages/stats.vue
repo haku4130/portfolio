@@ -38,6 +38,7 @@ interface StatsSummary {
   referrers: { source: string | null, views: number }[]
   countries: { country: string | null, views: number }[]
   cities: { city: string | null, country: string | null, views: number }[]
+  distinct?: { referrers: number, countries: number, cities: number }
   recent: StatsEvent[]
 }
 
@@ -428,6 +429,7 @@ const topContacts = computed<TopListItem[]>(() =>
           title="Источники"
           icon="i-lucide-share-2"
           :items="topReferrers"
+          :badge="data?.distinct?.referrers"
           :loading="pending && !data"
           empty="Источников пока нет"
         />
@@ -435,6 +437,7 @@ const topContacts = computed<TopListItem[]>(() =>
           title="Страны"
           icon="i-lucide-globe"
           :items="topCountries"
+          :badge="data?.distinct?.countries"
           :loading="pending && !data"
           empty="Гео не определено"
         />
@@ -442,6 +445,7 @@ const topContacts = computed<TopListItem[]>(() =>
           title="Города"
           icon="i-lucide-map-pin"
           :items="topCities"
+          :badge="data?.distinct?.cities"
           :loading="pending && !data"
           empty="Гео не определено"
         />

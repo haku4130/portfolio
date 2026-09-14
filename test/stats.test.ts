@@ -131,6 +131,48 @@ describe('buildSummary', () => {
     expect(summary.cities[0]).toEqual({ city: 'Москва', country: 'RU', views: 2 })
   })
 
+  it('counts distinct sources, countries and cities', () => {
+    insertEvent(db, event({ referrer: 'hh.ru', country: 'RU', city: 'Москва' }))
+    insertEvent(db, event({ referrer: 'hh.ru', country: 'RU', city: 'Москва' }))
+    insertEvent(db, event({ referrer: 'direct', country: 'RU', city: 'Казань' }))
+    insertEvent(db, event({ referrer: 'direct', country: 'DE', city: 'Berlin' }))
+
+    expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).distinct).toEqual({
+      referrers: 2,
+      countries: 2,
+      cities: 3
+    })
+  })
+
+  it('counts a failed geo lookup as its own group, matching the rows shown', () => {
+    insertEvent(db, event({ country: 'RU', city: 'Москва' }))
+    insertEvent(db, event({ country: null, city: null }))
+
+    const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
+
+    expect(summary.countries).toHaveLength(2)
+    expect(summary.distinct.countries).toBe(2)
+  })
+
+  it('counts distinct values beyond the top-list cap', () => {
+    for (let i = 0; i < 15; i++) {
+      insertEvent(db, event({ country: `C${i}`, city: `City${i}`, referrer: `ref${i}.example` }))
+    }
+
+    const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
+
+    expect(summary.countries).toHaveLength(10)
+    expect(summary.distinct).toEqual({ referrers: 15, countries: 15, cities: 15 })
+  })
+
+  it('excludes bots from the distinct counts unless asked for', () => {
+    insertEvent(db, event({ country: 'RU' }))
+    insertEvent(db, event({ country: 'CN', bot: true }))
+
+    expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).distinct.countries).toBe(1)
+    expect(buildSummary(db, { period: '7d', bots: true, now: NOW }).distinct.countries).toBe(2)
+  })
+
   it('buckets the timeline by day, oldest first', () => {
     insertEvent(db, event({ ts: NOW - DAY, visitor: 'a' }))
     insertEvent(db, event({ ts: NOW - DAY, visitor: 'b' }))
