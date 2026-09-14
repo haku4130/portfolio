@@ -96,8 +96,12 @@ export async function sendTelegram(text: string): Promise<void> {
   const chatId = process.env.TELEGRAM_CHAT_ID
   if (!token || !chatId) return
 
+  // Telegram is unreachable from some networks, so the API host is
+  // configurable: point TELEGRAM_API_BASE at a reverse proxy that can reach it.
+  const base = (process.env.TELEGRAM_API_BASE || 'https://api.telegram.org').replace(/\/+$/, '')
+
   try {
-    await $fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    await $fetch(`${base}/bot${token}/sendMessage`, {
       method: 'POST',
       body: {
         chat_id: chatId,

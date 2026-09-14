@@ -168,6 +168,38 @@ describe('sendTelegram', () => {
     expect(logged[0]).toContain('FetchError')
   })
 
+  it('sends through a configured proxy base instead of telegram directly', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = TOKEN
+    process.env.TELEGRAM_CHAT_ID = '12345'
+    process.env.TELEGRAM_API_BASE = 'https://proxy.example:88/'
+
+    let calledUrl = ''
+    globalThis.$fetch = ((url: string) => {
+      calledUrl = url
+      return Promise.resolve()
+    }) as never
+
+    await sendTelegram('hello')
+
+    expect(calledUrl).toBe(`https://proxy.example:88/bot${TOKEN}/sendMessage`)
+    delete process.env.TELEGRAM_API_BASE
+  })
+
+  it('falls back to the telegram api when no proxy is configured', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = TOKEN
+    process.env.TELEGRAM_CHAT_ID = '12345'
+
+    let calledUrl = ''
+    globalThis.$fetch = ((url: string) => {
+      calledUrl = url
+      return Promise.resolve()
+    }) as never
+
+    await sendTelegram('hello')
+
+    expect(calledUrl).toBe(`https://api.telegram.org/bot${TOKEN}/sendMessage`)
+  })
+
   it('does nothing at all when the bot is not configured', async () => {
     let called = false
     globalThis.$fetch = (() => {

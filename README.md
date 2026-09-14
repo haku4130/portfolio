@@ -52,6 +52,7 @@ downloads, contact clicks and visits that arrive through a utm-tagged link.
 | `ANALYTICS_SALT` | Secret for visitor hashing; if unset a random one is generated per restart and unique counts reset |
 | `TELEGRAM_BOT_TOKEN` | Bot token for alerts; alerts are silently skipped when unset |
 | `TELEGRAM_CHAT_ID` | Chat that receives the alerts |
+| `TELEGRAM_API_BASE` | Optional. Base URL of a Bot API reverse proxy, for hosts that cannot reach `api.telegram.org` directly; defaults to Telegram itself |
 
 `ANALYTICS_DB` and `GEOIP_DB` are set by `docker-compose.yml` and the
 `Dockerfile`; the database lives in the `portfolio-data` volume so deploys do
