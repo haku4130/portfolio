@@ -5,6 +5,17 @@ services:
     image: haku4130/portfolio:latest
     container_name: portfolio
     restart: always
+    # Secrets live in .env on the server only (never in the repository):
+    # TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, ANALYTICS_SALT, STATS_BASIC_AUTH.
+    # required: false keeps `docker compose up` working when .env is missing.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - ANALYTICS_DB=/data/analytics.db
+    volumes:
+      # Named volume keeps the analytics database across `up -d --build` deploys
+      - portfolio-data:/data
     networks:
       - traefik-public
     labels:
@@ -21,7 +32,33 @@ services:
       - traefik.http.routers.portfolio-https.tls=true
       - traefik.http.routers.portfolio-https.tls.certresolver=le
       - traefik.http.routers.portfolio-https.service=portfolio
+      # Analytics dashboard + its API, behind HTTP basic auth.
+      # Higher priority than portfolio-https so these paths win the match.
+      - traefik.http.routers.portfolio-stats.entrypoints=https
+      - traefik.http.routers.portfolio-stats.rule=Host(`aosipov.dev`) && (PathPrefix(`/stats`) || PathPrefix(`/en/stats`) || PathPrefix(`/api/stats`))
+      - traefik.http.routers.portfolio-stats.priority=100
+      - traefik.http.routers.portfolio-stats.tls=true
+      - traefik.http.routers.portfolio-stats.tls.certresolver=le
+      - traefik.http.routers.portfolio-stats.service=portfolio
+      - traefik.http.routers.portfolio-stats.middlewares=stats-auth
+      # htpasswd hash comes from STATS_BASIC_AUTH in .env on the server.
+      # IMPORTANT: Compose expands `$` both in this file and inside .env values,
+      # so in .env every dollar of the hash must be doubled (`admin:$$apr1$$...`)
+      # or the whole value single-quoted — otherwise `$apr1` is read as an empty
+      # variable and the hash arrives at Traefik mangled (verified with
+      # `docker compose config`). Generate the value with:
+      #   htpasswd -nbB admin 'secret' | sed -e 's/\$/\$\$/g'
+      # Same rule applies if a hash is ever hardcoded in a label here.
+      # The fallback is a bcrypt hash of a random password that was discarded on
+      # generation: if STATS_BASIC_AUTH is missing the middleware stays valid
+      # and rejects everyone (fail closed). It must stay a hash, never a plain
+      # password - Traefik accepts plaintext entries, so a readable placeholder
+      # in this repository would be a working password for anyone who read it.
+      - traefik.http.middlewares.stats-auth.basicauth.users=${STATS_BASIC_AUTH:-stats:$$2y$$05$$Ayw8tkdHU/KNhgr.tZLk8u.yJe4XDKU5oFAGSS5moFhw3gyzl6onC}
 
 networks:
   traefik-public:
     external: true
+
+volumes:
+  portfolio-data:

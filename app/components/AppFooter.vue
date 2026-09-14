@@ -19,6 +19,7 @@ const credits = computed(
           v-for="(link, index) of footer?.links"
           :key="index"
           v-bind="{ size: 'xs', color: 'neutral', variant: 'ghost', ...link }"
+          @click="trackContact(link['aria-label'])"
         />
       </template>
     </template>

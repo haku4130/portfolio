@@ -9,6 +9,8 @@ defineProps<{
 }>()
 
 function downloadResume(lang: 'ru' | 'en') {
+  trackEvent('resume_download', lang)
+
   const link = document.createElement('a')
   link.href = lang === 'en' ? '/resume-en.pdf' : '/resume-ru.pdf'
   link.download =
@@ -146,6 +148,7 @@ const resumeItems = computed(() => [
             :label="
               global.available ? t('hero.available') : t('hero.unavailable')
             "
+            @click="global.available && trackEvent('contact_click', 'meeting')"
           >
             <template #leading>
               <span class="relative flex size-2">
@@ -186,6 +189,7 @@ const resumeItems = computed(() => [
         >
           <UButton
             v-bind="{ size: 'md', color: 'neutral', variant: 'ghost', ...link }"
+            @click="trackContact(link['aria-label'])"
           />
         </Motion>
       </div>

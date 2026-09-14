@@ -29,12 +29,33 @@ export default defineNuxtConfig({
     }
   },
 
+  routeRules: {
+    '/stats': {
+      prerender: false,
+      cache: false,
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow',
+        'Cache-Control': 'no-store, max-age=0'
+      }
+    },
+    '/en/stats': {
+      prerender: false,
+      cache: false,
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow',
+        'Cache-Control': 'no-store, max-age=0'
+      }
+    }
+  },
+
   compatibilityDate: '2026-06-30',
 
   nitro: {
     prerender: {
       routes: ['/'],
-      crawlLinks: true
+      crawlLinks: true,
+      // The analytics dashboard is dynamic and auth-protected: never prerender it
+      ignore: ['/stats', '/en/stats']
     }
   },
 

@@ -1,1 +1,5 @@
-
+User-agent: *
+Disallow: /stats
+Disallow: /en/stats
+Disallow: /api/
+Allow: /
