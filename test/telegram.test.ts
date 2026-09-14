@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { AnalyticsEvent } from '../server/utils/db'
-import { createNotifier, formatEvent } from '../server/utils/telegram'
+import { createNotifier, formatEvent, sendTelegram } from '../server/utils/telegram'
 
 const NOW = Date.UTC(2026, 8, 13, 12, 0, 0)
 const MINUTE = 60 * 1000
@@ -131,5 +131,52 @@ describe('formatEvent', () => {
 
     expect(text).toContain('telegram')
     expect(text).toContain('outreach')
+  })
+})
+
+describe('sendTelegram', () => {
+  const ORIGINAL_FETCH = globalThis.$fetch
+  const TOKEN = 'top-secret-bot-token'
+
+  afterEach(() => {
+    globalThis.$fetch = ORIGINAL_FETCH
+    delete process.env.TELEGRAM_BOT_TOKEN
+    delete process.env.TELEGRAM_CHAT_ID
+    vi.restoreAllMocks()
+  })
+
+  it('never lets the bot token reach the log when the request fails', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = TOKEN
+    process.env.TELEGRAM_CHAT_ID = '12345'
+
+    // Real fetch errors quote the request URL, and the URL contains the token.
+    const failure = new Error(
+      `[POST] "https://api.telegram.org/bot${TOKEN}/sendMessage": <no response> timeout`
+    )
+    failure.name = 'FetchError'
+    globalThis.$fetch = (() => Promise.reject(failure)) as never
+
+    const logged: string[] = []
+    vi.spyOn(console, 'error').mockImplementation((...args: unknown[]) => {
+      logged.push(args.map(String).join(' '))
+    })
+
+    await sendTelegram('hello')
+
+    expect(logged).toHaveLength(1)
+    expect(logged[0]).not.toContain(TOKEN)
+    expect(logged[0]).toContain('FetchError')
+  })
+
+  it('does nothing at all when the bot is not configured', async () => {
+    let called = false
+    globalThis.$fetch = (() => {
+      called = true
+      return Promise.resolve()
+    }) as never
+
+    await sendTelegram('hello')
+
+    expect(called).toBe(false)
   })
 })

@@ -79,6 +79,14 @@ export function formatEvent(event: AnalyticsEvent): string {
   return lines.join('\n')
 }
 
+/** A short, token-free description of a failure. */
+function describe(error: unknown): string {
+  if (!(error instanceof Error)) return 'unknown error'
+
+  const cause = error.cause instanceof Error ? ` (${error.cause.name})` : ''
+  return `${error.name}${cause}`
+}
+
 /**
  * Fire and forget: a missing token, a blocked bot or a network hiccup must
  * never turn into a failed page load.
@@ -99,6 +107,8 @@ export async function sendTelegram(text: string): Promise<void> {
       timeout: 5000
     })
   } catch (error) {
-    console.error('[analytics] telegram notification failed:', error)
+    // Never log the error object: the request URL carries the bot token, and
+    // fetch errors quote that URL verbatim in their message.
+    console.error(`[analytics] telegram notification failed: ${describe(error)}`)
   }
 }
