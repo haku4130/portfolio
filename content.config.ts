@@ -96,6 +96,7 @@ const createIndexSchema = () =>
       )
     }),
     testimonials: z.array(createTestimonialSchema()),
+    projects: createBaseSchema(),
     faq: createBaseSchema().extend({
       categories: z.array(
         z.object({

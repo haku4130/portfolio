@@ -12,7 +12,8 @@ export default defineI18nConfig(() => ({
         unavailable: 'В настоящее время недоступен'
       },
       projects: {
-        view: 'Открыть проект'
+        view: 'Открыть проект',
+        all: 'Все проекты'
       },
       experience: {
         visit: 'Перейти на сайт'
@@ -38,7 +39,8 @@ export default defineI18nConfig(() => ({
         unavailable: 'Not available at the moment'
       },
       projects: {
-        view: 'View Project'
+        view: 'View Project',
+        all: 'All projects'
       },
       experience: {
         visit: 'Visit website'

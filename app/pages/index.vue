@@ -2,22 +2,10 @@
 const { locale } = useI18n()
 const { data: page } = await useAsyncData(
   `index-${locale.value}`,
-  async () => {
-    const doc = await queryCollection(
+  () => {
+    return queryCollection(
       locale.value === 'en' ? 'indexEn' : 'indexRu'
     ).first()
-    if (!doc) return null
-    const { parseMarkdown } = await import('@nuxtjs/mdc/runtime')
-    await Promise.all(
-      doc.faq.categories.flatMap(category =>
-        category.questions.map(async question => {
-          question.content = (await parseMarkdown(
-            question.content
-          )) as unknown as string
-        })
-      )
-    )
-    return doc
   },
   { watch: [locale] }
 )
@@ -54,6 +42,13 @@ useSeoMeta({
       <LandingTechStack :page />
     </UPageSection>
     <LandingTestimonials :page />
-    <LandingFAQ :page />
+    <!--
+      Блок FAQ скрыт: вместо него внизу главной стоит тизер проектов.
+      Чтобы вернуть – поставить <LandingFAQ :page /> сюда и вернуть в
+      useAsyncData выше разбор markdown у page.faq (LandingFAQ ждёт
+      question.content уже распаршенным через @nuxtjs/mdc/runtime).
+      Сам компонент, контент faq: в index.yml и его схема на месте.
+    -->
+    <LandingProjectsPreview :page />
   </UPage>
 </template>

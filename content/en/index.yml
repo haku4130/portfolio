@@ -192,6 +192,9 @@ testimonials:
       description: 'Founder, VendorHub'
       avatar:
         src: 'https://ui-avatars.com/api/?name=DS&size=80&background=065f46&color=6ee7b7'
+projects:
+  title: Projects
+  description: Commercial projects – from architecture and backend to frontend and deployment.
 faq:
   title: Frequently asked questions
   description: A bit about how I work, what I think about technology, and how to work with me.

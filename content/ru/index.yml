@@ -192,6 +192,9 @@ testimonials:
       description: 'Основатель, Vendor Hub'
       avatar:
         src: 'https://ui-avatars.com/api/?name=ДШ&size=80&background=065f46&color=6ee7b7'
+projects:
+  title: Проекты
+  description: Коммерческие проекты – от архитектуры и бэкенда до фронтенда и деплоя.
 faq:
   title: Часто задаваемые вопросы
   description: Немного о том, как я работаю, что думаю о технологиях и как со мной сотрудничать.
