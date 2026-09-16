@@ -19,15 +19,29 @@ experience:
   items:
     - position: 'Python Developer'
       date: '09.2025 – Present'
-      summary: 'High-load services for transport-security systems: multi-terabyte MongoDB, heavy parallel data processing, and sensitive data under NDA.'
+      summary: 'Services for Moscow transport-security systems. Sensitive data under NDA.'
       details:
-        - 'Designed and shipped an aggregating collection over a multi-terabyte MongoDB store, consolidated dozens of disparate collections into a single model, cut time to retrieve a full record summary from 3–5s to <100ms and reduced database load by ~40%.'
-        - 'Built from scratch a Git-style state-versioning system (change commits, state diffs, stable versions and a history graph), made regressions between releases traceable and halved acceptance-testing time.'
+        - 'Designed and shipped an aggregated data model over a multi-terabyte MongoDB store (8.6B records), consolidated data from dozens of collections, cut time to retrieve a full object summary from 3.2s to 87ms and reduced database load by 37%.'
+        - 'Built from scratch a Git-style state-versioning system for the core service (change commits, state diffs, stable versions and a history graph), made regressions between releases traceable and sped up acceptance testing 1.7x.'
         - 'Stabilized and extended a high-load parallel data-processing system (threading, multiprocessing) and ensured correct service behavior under peak load.'
-        - 'Introduced centralized error monitoring (Sentry) and uptime alerting to Telegram across my services, cut mean time to detect (MTTD) from hours to minutes and eliminated silent failures.'
-        - 'Rewrote legacy services on async FastAPI, reduced p95 latency from ~500ms to 80ms and increased throughput 1.5–2x.'
-        - 'Applied information-security practices in services handling sensitive data under NDA: input validation, access control and dependency review.'
-      stack: ['Python', 'FastAPI', 'MongoDB', 'Redis', 'Docker', 'Sentry']
+        - 'Introduced centralized error monitoring (Sentry) and uptime alerting to Telegram across my services, cut mean time to detect incidents from 4 hours to 5 minutes and eliminated silent failures.'
+        - 'Rewrote legacy services on FastAPI with an async architecture, reduced p95 latency from 480ms to 85ms and increased throughput from 450 to 720 RPS.'
+        - 'Applied information-security practices in services handling sensitive data under NDA: input validation, access control and dependency review, which let the services pass external security audits.'
+      stack:
+        [
+          'Python',
+          'FastAPI',
+          'MongoDB',
+          'Redis',
+          'ClickHouse',
+          'Docker',
+          'RabbitMQ',
+          'asyncio',
+          'threading',
+          'multiprocessing',
+          'Sentry',
+          'Claude Code'
+        ]
       company:
         name: Innovation Center «Safe Transport»
         logo: '/logos/ict.png'
@@ -35,16 +49,30 @@ experience:
         color: '#7c3aed'
     - position: 'Python Developer'
       date: '09.2024 – 08.2025'
-      summary: 'Django (DRF) monolith plus aiohttp and FastAPI microservices; team of 15 engineers, full ownership of my services.'
+      summary: 'Leading Russian video platform. Django (DRF) monolith plus aiohttp and FastAPI microservices; team of 13 engineers; owned my services end to end – from development and code review to running them in production.'
       details:
-        - 'Optimized 10+ high-load API endpoints using Prometheus and Grafana data: reworked ORM queries (select_related/prefetch, indexes), added Redis caching and rate limiting and cut p95 latency from ~1s to <100ms at ~100 RPS per instance.'
-        - 'Rewrote 10+ minute SQL queries using Django CTEs and window functions, cut their execution time to seconds and removed critical load from the database.'
-        - 'Moved 200+ tests to pytest with parallelized CI runs, raised coverage from below 50% and sped up the pipeline.'
-        - 'Migrated API docs to OpenAPI 3.0, replaced django-rest-swagger with drf-spectacular, documented 150+ endpoints and delivered clear API contracts to neighboring teams.'
-        - 'Ran a security audit of the services, closed SQL injections and replaced insecure libraries.'
-        - 'Unified Dockerfiles for two services, adopted the uv package manager and sped up image builds.'
+        - 'Optimized 10+ high-load API endpoints using Prometheus and Grafana data: reworked ORM queries (select_related/prefetch, indexes), added Redis caching and rate limiting and cut p95 latency from 1.1s to 92ms at ~16,000 RPS.'
+        - 'Rewrote heavy SQL queries using Django CTEs and window functions, cut their execution time from 12 minutes to 8 seconds and removed critical load from PostgreSQL.'
+        - 'Moved 200+ tests to pytest with parallelized CI/CD runs via pytest-xdist, raised coverage from 42% to 78% and significantly sped up the pipeline.'
+        - 'Migrated API docs to OpenAPI 3.0, replaced django-rest-swagger with drf-spectacular, documented 157 endpoints and delivered clear API contracts to neighboring teams.'
+        - 'Ran a security audit of the services, closed OWASP Top 10 vulnerabilities, updated insecure dependencies and tightened access policies.'
+        - 'Unified Dockerfiles for two services, adopted the uv package manager and cut CI image build time from 8.5 minutes to 2 minutes on average.'
       stack:
-        ['Python', 'Django', 'DRF', 'aiohttp', 'FastAPI', 'PostgreSQL', 'Redis', 'Prometheus', 'Grafana', 'Docker', 'pytest']
+        [
+          'Python',
+          'Django',
+          'DRF',
+          'aiohttp',
+          'FastAPI',
+          'PostgreSQL',
+          'Redis',
+          'Prometheus',
+          'Grafana',
+          'Elasticsearch',
+          'Docker',
+          'pytest',
+          'microservices'
+        ]
       company:
         name: RUTUBE
         logo: '/logos/rutube.png'
@@ -52,13 +80,12 @@ experience:
         color: '#e62117'
     - position: 'Python Developer'
       date: '05.2023 – 08.2024'
-      summary: 'Backend development of corporate web services on Python/Django with PostgreSQL: server-side logic, integrations, and production infrastructure.'
+      summary: 'Backend development of corporate web services on Python/Django with PostgreSQL: server-side logic, integrations and production infrastructure.'
       details:
-        - 'Built and shipped the backend of 4 corporate web projects on Python/Django (DRF) with PostgreSQL: domain models, business logic, catalogs, and admin panels.'
-        - 'Implemented server-side handling of client requests with validation, PostgreSQL storage and instant notifications and cut business response time from hours to 1–2 minutes.'
-        - 'Integrated payment systems, web analytics and email delivery via APIs and ensured reliable payment handling.'
-        - 'Optimized service performance: added caching, reworked SQL queries and indexes and sped up page response.'
-        - 'Set up production infrastructure and deployment (hosting, domains, SSL/HTTPS) and kept services running reliably in production.'
+        - 'Built and shipped the backend of 4 corporate web projects on Python/Django (DRF) with PostgreSQL, implementing domain models, business logic and admin panels.'
+        - 'Implemented server-side handling of client requests with validation, PostgreSQL storage and instant notifications and cut business response time from 2 hours to 90 seconds.'
+        - 'Integrated payment systems, web analytics and email delivery.'
+        - 'Ran initial performance optimization: added caching, reworked indexes and SQL queries and sped up page response from 1.8s to 400ms.'
       stack: ['Python', 'Django', 'DRF', 'PostgreSQL', 'Nginx', 'Docker']
       company:
         name: PSK SOFT LLC
