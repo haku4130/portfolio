@@ -19,27 +19,32 @@ experience:
   items:
     - position: 'Python Developer'
       date: '09.2025 – Present'
-      summary: 'Services for Moscow transport-security systems. Sensitive data under NDA.'
+      summary: 'Services for Moscow transport-security systems: main service on Flask, newer services on FastAPI. Sensitive data under NDA.'
       details:
         - 'Designed and shipped an aggregated data model over a multi-terabyte MongoDB store (8.6B records), consolidated data from dozens of collections, cut time to retrieve a full object summary from 3.2s to 87ms and reduced database load by 37%.'
-        - 'Built from scratch a Git-style state-versioning system for the core service (change commits, state diffs, stable versions and a history graph), made regressions between releases traceable and sped up acceptance testing 1.7x.'
-        - 'Stabilized and extended a high-load parallel data-processing system (threading, multiprocessing) and ensured correct service behavior under peak load.'
-        - 'Introduced centralized error monitoring (Sentry) and uptime alerting to Telegram across my services, cut mean time to detect incidents from 4 hours to 5 minutes and eliminated silent failures.'
-        - 'Rewrote legacy services on FastAPI with an async architecture, reduced p95 latency from 480ms to 85ms and increased throughput from 450 to 720 RPS.'
-        - 'Applied information-security practices in services handling sensitive data under NDA: input validation, access control and dependency review, which let the services pass external security audits.'
+        - 'Built a neural-network photo deduplication service (FastAPI, PyTorch): MobileNetV3 embeddings for similarity search, a YOLO11 detector for a stricter threshold on photos with vehicles, CNN detection of placeholder images and grouping via graph connected components. Reaches up to 97% accuracy on up to 10,000 photos a day, explains every match (reason, matched photo, similarity score) and is covered by 122 tests.'
+        - 'Built from scratch a Git-style state-versioning system for the core service (change commits, state diffs, stable versions and a history graph) in about two weeks with Claude Code as a coding agent, made regressions between releases traceable and sped up acceptance testing 1.7x.'
+        - 'Migrated inherited Flask services, including the deduplication service, to async FastAPI without breaking API contracts; on legacy services cut p95 latency from 480ms to 85ms and raised throughput from 450 to 720 RPS.'
+        - 'Introduced centralized error monitoring (Sentry) and uptime alerting to Telegram across my services, plus health checks with hang detection and deploys with automatic rollback for the deduplication service; cut mean time to detect incidents from 4 hours to 5 minutes and eliminated silent failures.'
+        - 'Set up OAuth 2.0 via Authentik and JWT authentication for my services and applied input validation, access control and dependency review to services handling sensitive data, which let them pass external security audits.'
       stack:
         [
           'Python',
           'FastAPI',
+          'Flask',
+          'PyTorch',
           'MongoDB',
           'Redis',
           'ClickHouse',
-          'Docker',
           'RabbitMQ',
+          'Docker',
+          'Authentik',
+          'Sentry',
           'asyncio',
           'threading',
           'multiprocessing',
-          'Sentry',
+          'mypy',
+          'pyright',
           'Claude Code'
         ]
       company:
@@ -49,14 +54,14 @@ experience:
         color: '#7c3aed'
     - position: 'Python Developer'
       date: '09.2024 – 08.2025'
-      summary: 'Leading Russian video platform. Django (DRF) monolith plus aiohttp and FastAPI microservices; team of 13 engineers; owned my services end to end – from development and code review to running them in production.'
+      summary: 'Leading Russian video platform. Django (DRF) monolith plus aiohttp, FastAPI and Go microservices communicating over Kafka, heavy processing offloaded to Celery; team of 13 engineers; owned my services end to end – from development and code review to running them in production on Kubernetes.'
       details:
         - 'Optimized 10+ high-load API endpoints using Prometheus and Grafana data: reworked ORM queries (select_related/prefetch, indexes), added Redis caching and rate limiting and cut p95 latency from 1.1s to 92ms at ~16,000 RPS.'
         - 'Rewrote heavy SQL queries using Django CTEs and window functions, cut their execution time from 12 minutes to 8 seconds and removed critical load from PostgreSQL.'
         - 'Moved 200+ tests to pytest with parallelized CI/CD runs via pytest-xdist, raised coverage from 42% to 78% and significantly sped up the pipeline.'
         - 'Migrated API docs to OpenAPI 3.0, replaced django-rest-swagger with drf-spectacular, documented 157 endpoints and delivered clear API contracts to neighboring teams.'
         - 'Ran a security audit of the services, closed OWASP Top 10 vulnerabilities, updated insecure dependencies and tightened access policies.'
-        - 'Unified Dockerfiles for two services, adopted the uv package manager and cut CI image build time from 8.5 minutes to 2 minutes on average.'
+        - 'Unified Dockerfiles for two services and adopted the uv package manager, cutting CI image builds from 8.5 to 2 minutes; deployed and operated services on Kubernetes via Rancher: rollouts, pod management and incident investigation inside pods.'
       stack:
         [
           'Python',
@@ -66,10 +71,15 @@ experience:
           'FastAPI',
           'PostgreSQL',
           'Redis',
+          'Kafka',
+          'Celery',
+          'gRPC',
+          'Cassandra',
+          'Elasticsearch',
           'Prometheus',
           'Grafana',
-          'Elasticsearch',
           'Docker',
+          'Kubernetes (Rancher)',
           'pytest',
           'microservices'
         ]
@@ -119,6 +129,9 @@ stack:
     - name: FastAPI
       icon: 'i-simple-icons-fastapi'
       color: '#009688'
+    - name: Flask
+      icon: 'i-simple-icons-flask'
+      color: '#3BABC3'
     - name: PostgreSQL
       icon: 'i-simple-icons-postgresql'
       color: '#4169E1'
@@ -170,6 +183,9 @@ stack:
     - name: Nuxt
       icon: 'i-simple-icons-nuxt'
       color: '#00DC82'
+    - name: PyTorch
+      icon: 'i-simple-icons-pytorch'
+      color: '#EE4C2C'
     - name: Claude AI
       icon: 'i-simple-icons-claude'
       color: '#D97757'
