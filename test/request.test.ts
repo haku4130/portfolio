@@ -103,6 +103,13 @@ describe('parseEventInput', () => {
     expect(parseEventInput({ type: 'contact_click', label: 'github', path: '/' })?.label).toBe('github')
   })
 
+  it('accepts an engagement signal without a label', () => {
+    expect(parseEventInput({ type: 'engage', path: '/', label: 'github' })).toMatchObject({
+      type: 'engage',
+      label: null
+    })
+  })
+
   it('rejects unknown event types and labels so the table cannot be polluted', () => {
     expect(parseEventInput({ type: 'whatever', path: '/' })).toBeNull()
     expect(parseEventInput({ type: 'contact_click', label: 'made-up', path: '/' })).toBeNull()

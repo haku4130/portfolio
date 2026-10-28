@@ -21,6 +21,7 @@ interface StatsEvent {
   browser: string | null
   os: string | null
   bot: number | null
+  human: number | null
 }
 
 interface StatsSummary {
@@ -308,7 +309,12 @@ const topContacts = computed<TopListItem[]>(() =>
           @update:model-value="value => (period = value as StatsPeriod)"
         />
 
-        <USwitch v-model="showBots" label="Показывать ботов" size="sm" />
+        <USwitch
+          v-model="showBots"
+          label="Показывать ботов"
+          description="Без них считаются только те, кто взаимодействовал со страницей"
+          size="sm"
+        />
       </div>
     </div>
 
@@ -525,8 +531,9 @@ const topContacts = computed<TopListItem[]>(() =>
                     size="sm"
                   />
                   <UBadge
-                    v-if="event.bot"
-                    label="бот"
+                    v-if="event.bot || !event.human"
+                    :label="event.bot ? 'бот' : 'без действий'"
+                    :title="event.bot ? undefined : 'Не взаимодействовал со страницей: скорее всего, бот под видом браузера'"
                     color="warning"
                     variant="subtle"
                     size="sm"

@@ -1,4 +1,4 @@
-type EventType = 'pageview' | 'resume_download' | 'contact_click'
+type EventType = 'pageview' | 'resume_download' | 'contact_click' | 'engage'
 
 const ENTRY_KEY = 'a:entry'
 

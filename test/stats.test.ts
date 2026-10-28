@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3'
 import { beforeEach, describe, expect, it } from 'vitest'
 import type { AnalyticsEvent } from '../server/utils/db'
-import { insertEvent, migrate, pruneOldEvents } from '../server/utils/db'
+import { insertEvent, markHuman, migrate, pruneOldEvents } from '../server/utils/db'
 import { buildSummary, periodRange } from '../server/utils/stats'
 
 const NOW = Date.UTC(2026, 8, 13, 12, 0, 0)
@@ -36,6 +36,13 @@ function event(partial: Partial<AnalyticsEvent> = {}): AnalyticsEvent {
   }
 }
 
+/** Stores an event from a visitor who already proved to be a person. */
+function record(db: Database.Database, partial: Partial<AnalyticsEvent> = {}) {
+  const stored = event(partial)
+  insertEvent(db, stored)
+  markHuman(db, stored.visitor, stored.ts)
+}
+
 describe('periodRange', () => {
   it('covers the trailing window for each period', () => {
     expect(periodRange('24h', NOW)).toEqual({ from: NOW - DAY, to: NOW })
@@ -65,11 +72,11 @@ describe('buildSummary', () => {
   })
 
   it('counts views and unique visitors per window', () => {
-    insertEvent(db, event({ ts: NOW - HOUR, visitor: 'a' }))
-    insertEvent(db, event({ ts: NOW - 2 * HOUR, visitor: 'a' }))
-    insertEvent(db, event({ ts: NOW - 3 * HOUR, visitor: 'b' }))
-    insertEvent(db, event({ ts: NOW - 3 * DAY, visitor: 'c' }))
-    insertEvent(db, event({ ts: NOW - 20 * DAY, visitor: 'd' }))
+    record(db, { ts: NOW - HOUR, visitor: 'a' })
+    record(db, { ts: NOW - 2 * HOUR, visitor: 'a' })
+    record(db, { ts: NOW - 3 * HOUR, visitor: 'b' })
+    record(db, { ts: NOW - 3 * DAY, visitor: 'c' })
+    record(db, { ts: NOW - 20 * DAY, visitor: 'd' })
 
     const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
 
@@ -79,7 +86,7 @@ describe('buildSummary', () => {
   })
 
   it('excludes bots unless they are asked for', () => {
-    insertEvent(db, event({ ts: NOW - HOUR, visitor: 'human' }))
+    record(db, { ts: NOW - HOUR, visitor: 'human' })
     insertEvent(db, event({ ts: NOW - HOUR, visitor: 'crawler', bot: true }))
 
     expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).totals.day.views).toBe(1)
@@ -87,9 +94,9 @@ describe('buildSummary', () => {
   })
 
   it('splits resume downloads by language', () => {
-    insertEvent(db, event({ type: 'resume_download', label: 'en', ts: NOW - HOUR }))
-    insertEvent(db, event({ type: 'resume_download', label: 'en', ts: NOW - 2 * HOUR }))
-    insertEvent(db, event({ type: 'resume_download', label: 'ru', ts: NOW - 3 * HOUR }))
+    record(db, { type: 'resume_download', label: 'en', ts: NOW - HOUR })
+    record(db, { type: 'resume_download', label: 'en', ts: NOW - 2 * HOUR })
+    record(db, { type: 'resume_download', label: 'ru', ts: NOW - 3 * HOUR })
 
     expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).resume).toEqual({
       ru: 1,
@@ -99,7 +106,7 @@ describe('buildSummary', () => {
   })
 
   it('does not count resume downloads as page views', () => {
-    insertEvent(db, event({ type: 'resume_download', label: 'ru', ts: NOW - HOUR }))
+    record(db, { type: 'resume_download', label: 'ru', ts: NOW - HOUR })
 
     const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
 
@@ -108,9 +115,9 @@ describe('buildSummary', () => {
   })
 
   it('ranks contact clicks by label', () => {
-    insertEvent(db, event({ type: 'contact_click', label: 'github', ts: NOW - HOUR }))
-    insertEvent(db, event({ type: 'contact_click', label: 'github', ts: NOW - HOUR }))
-    insertEvent(db, event({ type: 'contact_click', label: 'telegram', ts: NOW - HOUR }))
+    record(db, { type: 'contact_click', label: 'github', ts: NOW - HOUR })
+    record(db, { type: 'contact_click', label: 'github', ts: NOW - HOUR })
+    record(db, { type: 'contact_click', label: 'telegram', ts: NOW - HOUR })
 
     expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).contacts).toEqual([
       { label: 'github', count: 2 },
@@ -119,9 +126,9 @@ describe('buildSummary', () => {
   })
 
   it('ranks pages, referrers, countries and cities by views', () => {
-    insertEvent(db, event({ path: '/', referrer: 'hh.ru', country: 'RU', city: 'Москва' }))
-    insertEvent(db, event({ path: '/', referrer: 'hh.ru', country: 'RU', city: 'Москва' }))
-    insertEvent(db, event({ path: '/projects', referrer: 'direct', country: 'DE', city: 'Berlin' }))
+    record(db, { path: '/', referrer: 'hh.ru', country: 'RU', city: 'Москва' })
+    record(db, { path: '/', referrer: 'hh.ru', country: 'RU', city: 'Москва' })
+    record(db, { path: '/projects', referrer: 'direct', country: 'DE', city: 'Berlin' })
 
     const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
 
@@ -132,10 +139,10 @@ describe('buildSummary', () => {
   })
 
   it('counts distinct sources, countries and cities', () => {
-    insertEvent(db, event({ referrer: 'hh.ru', country: 'RU', city: 'Москва' }))
-    insertEvent(db, event({ referrer: 'hh.ru', country: 'RU', city: 'Москва' }))
-    insertEvent(db, event({ referrer: 'direct', country: 'RU', city: 'Казань' }))
-    insertEvent(db, event({ referrer: 'direct', country: 'DE', city: 'Berlin' }))
+    record(db, { referrer: 'hh.ru', country: 'RU', city: 'Москва' })
+    record(db, { referrer: 'hh.ru', country: 'RU', city: 'Москва' })
+    record(db, { referrer: 'direct', country: 'RU', city: 'Казань' })
+    record(db, { referrer: 'direct', country: 'DE', city: 'Berlin' })
 
     expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).distinct).toEqual({
       referrers: 2,
@@ -145,8 +152,8 @@ describe('buildSummary', () => {
   })
 
   it('counts a failed geo lookup as its own group, matching the rows shown', () => {
-    insertEvent(db, event({ country: 'RU', city: 'Москва' }))
-    insertEvent(db, event({ country: null, city: null }))
+    record(db, { country: 'RU', city: 'Москва' })
+    record(db, { country: null, city: null })
 
     const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
 
@@ -156,7 +163,7 @@ describe('buildSummary', () => {
 
   it('counts distinct values beyond the top-list cap', () => {
     for (let i = 0; i < 15; i++) {
-      insertEvent(db, event({ country: `C${i}`, city: `City${i}`, referrer: `ref${i}.example` }))
+      record(db, { country: `C${i}`, city: `City${i}`, referrer: `ref${i}.example` })
     }
 
     const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
@@ -166,7 +173,7 @@ describe('buildSummary', () => {
   })
 
   it('excludes bots from the distinct counts unless asked for', () => {
-    insertEvent(db, event({ country: 'RU' }))
+    record(db, { country: 'RU' })
     insertEvent(db, event({ country: 'CN', bot: true }))
 
     expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).distinct.countries).toBe(1)
@@ -174,9 +181,9 @@ describe('buildSummary', () => {
   })
 
   it('buckets the timeline by day, oldest first', () => {
-    insertEvent(db, event({ ts: NOW - DAY, visitor: 'a' }))
-    insertEvent(db, event({ ts: NOW - DAY, visitor: 'b' }))
-    insertEvent(db, event({ ts: NOW, visitor: 'a' }))
+    record(db, { ts: NOW - DAY, visitor: 'a' })
+    record(db, { ts: NOW - DAY, visitor: 'b' })
+    record(db, { ts: NOW, visitor: 'a' })
 
     const timeline = buildSummary(db, { period: '7d', bots: false, now: NOW }).timeline
 
@@ -185,8 +192,8 @@ describe('buildSummary', () => {
   })
 
   it('fills days with no traffic so the chart cannot compress a gap', () => {
-    insertEvent(db, event({ ts: NOW - 3 * DAY, visitor: 'a' }))
-    insertEvent(db, event({ ts: NOW, visitor: 'b' }))
+    record(db, { ts: NOW - 3 * DAY, visitor: 'a' })
+    record(db, { ts: NOW, visitor: 'b' })
 
     const timeline = buildSummary(db, { period: '7d', bots: false, now: NOW }).timeline
 
@@ -213,7 +220,7 @@ describe('buildSummary', () => {
   })
 
   it('spans all time from the first event rather than from the epoch', () => {
-    insertEvent(db, event({ ts: NOW - 2 * DAY }))
+    record(db, { ts: NOW - 2 * DAY })
 
     const timeline = buildSummary(db, { period: 'all', bots: false, now: NOW }).timeline
 
@@ -225,8 +232,8 @@ describe('buildSummary', () => {
   })
 
   it('honours the selected period for rankings but not for the headline totals', () => {
-    insertEvent(db, event({ ts: NOW - 10 * DAY, path: '/old' }))
-    insertEvent(db, event({ ts: NOW - HOUR, path: '/new' }))
+    record(db, { ts: NOW - 10 * DAY, path: '/old' })
+    record(db, { ts: NOW - HOUR, path: '/new' })
 
     const week = buildSummary(db, { period: '7d', bots: false, now: NOW })
     expect(week.pages.map(p => p.path)).toEqual(['/new'])
@@ -237,17 +244,45 @@ describe('buildSummary', () => {
   })
 
   it('returns the most recent events first, newest at the top', () => {
-    insertEvent(db, event({ ts: NOW - 2 * HOUR, path: '/older' }))
-    insertEvent(db, event({ ts: NOW - HOUR, path: '/newer' }))
+    record(db, { ts: NOW - 2 * HOUR, path: '/older' })
+    record(db, { ts: NOW - HOUR, path: '/newer' })
 
     const recent = buildSummary(db, { period: '7d', bots: false, now: NOW }).recent
 
     expect(recent.map(e => e.path)).toEqual(['/newer', '/older'])
-    expect(recent[0]).toMatchObject({ ts: NOW - HOUR, type: 'pageview', bot: 0 })
+    expect(recent[0]).toMatchObject({ ts: NOW - HOUR, type: 'pageview', bot: 0, human: 1 })
+  })
+
+  it('hides visitors who never interacted with the page unless bots are asked for', () => {
+    record(db, { ts: NOW - HOUR, visitor: 'person' })
+    insertEvent(db, event({ ts: NOW - HOUR, visitor: 'disguised', browser: 'Safari', os: 'iOS' }))
+
+    const hidden = buildSummary(db, { period: '7d', bots: false, now: NOW })
+    expect(hidden.totals.day).toEqual({ views: 1, visitors: 1 })
+    expect(hidden.recent).toHaveLength(1)
+
+    const shown = buildSummary(db, { period: '7d', bots: true, now: NOW })
+    expect(shown.totals.day).toEqual({ views: 2, visitors: 2 })
+    expect(shown.recent.map(e => e.human).sort()).toEqual([0, 1])
+  })
+
+  it('counts every event of a visitor once they interact, including earlier ones', () => {
+    insertEvent(db, event({ ts: NOW - 2 * HOUR, visitor: 'late' }))
+    insertEvent(db, event({ ts: NOW - HOUR, visitor: 'late', path: '/about' }))
+    markHuman(db, 'late', NOW - HOUR)
+
+    expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).totals.day.views).toBe(2)
+  })
+
+  it('keeps a user agent bot hidden even if it marked itself as a person', () => {
+    insertEvent(db, event({ visitor: 'crawler', bot: true }))
+    markHuman(db, 'crawler', NOW)
+
+    expect(buildSummary(db, { period: '7d', bots: false, now: NOW }).totals.day.views).toBe(0)
   })
 
   it('keeps rows whose geo lookup failed', () => {
-    insertEvent(db, event({ country: null, city: null }))
+    record(db, { country: null, city: null })
 
     const summary = buildSummary(db, { period: '7d', bots: false, now: NOW })
 
@@ -264,5 +299,28 @@ describe('pruneOldEvents', () => {
 
     expect(pruneOldEvents(db, NOW)).toBe(1)
     expect(db.prepare('SELECT COUNT(*) AS c FROM events').get()).toEqual({ c: 1 })
+  })
+
+  it('forgets people past the retention window too', () => {
+    const db = makeDb()
+    markHuman(db, 'old', NOW - 400 * DAY)
+    markHuman(db, 'recent', NOW - 10 * DAY)
+
+    pruneOldEvents(db, NOW)
+
+    expect(db.prepare('SELECT visitor FROM humans').all()).toEqual([{ visitor: 'recent' }])
+  })
+})
+
+describe('migrate', () => {
+  it('treats visitors who clicked a contact or the resume before the upgrade as people', () => {
+    const db = makeDb()
+    insertEvent(db, event({ visitor: 'clicker', type: 'contact_click', label: 'github' }))
+    insertEvent(db, event({ visitor: 'reader' }))
+    insertEvent(db, event({ visitor: 'scripted', type: 'resume_download', label: 'ru', bot: true }))
+
+    migrate(db)
+
+    expect(db.prepare('SELECT visitor FROM humans').all()).toEqual([{ visitor: 'clicker' }])
   })
 })

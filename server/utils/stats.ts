@@ -31,6 +31,7 @@ export interface RecentEvent {
   browser: string | null
   os: string | null
   bot: number
+  human: number
 }
 
 export interface Summary {
@@ -55,12 +56,16 @@ export function periodRange(period: Period, now: number): { from: number, to: nu
   return { from: now - WINDOWS[period], to: now }
 }
 
+const HUMAN = 'visitor IN (SELECT visitor FROM humans)'
+
 /**
- * `bot = 0` is not a filter we can skip when bots are included, because the
- * column is never null — so the clause is simply dropped instead.
+ * Hiding bots takes two checks: the user agent says it is not a crawler, and
+ * the visitor proved to be a person by interacting with the page. When bots
+ * are included both are dropped rather than relaxed, since neither column can
+ * be null.
  */
 function botClause(bots: boolean): string {
-  return bots ? '' : ' AND bot = 0'
+  return bots ? '' : ` AND bot = 0 AND ${HUMAN}`
 }
 
 function counts(db: Database.Database, from: number, to: number, bots: boolean): Counts {
@@ -230,7 +235,8 @@ export function buildSummary(
     },
 
     recent: db.prepare(`
-      SELECT ts, type, label, path, country, city, referrer, device, browser, os, bot
+      SELECT ts, type, label, path, country, city, referrer, device, browser, os, bot,
+             ${HUMAN} AS human
       FROM events
       WHERE ts > ? AND ts <= ?${bot}
       ORDER BY ts DESC

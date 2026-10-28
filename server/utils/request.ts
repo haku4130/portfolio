@@ -7,8 +7,14 @@ const RESUME_LABELS = new Set(['ru', 'en'])
 const CONTACT_LABELS = new Set(['github', 'linkedin', 'telegram', 'email', 'hh', 'meeting'])
 const LOCALES = new Set(['ru', 'en'])
 
+/**
+ * `engage` is not stored as an event: it only marks the visitor as a person,
+ * see `markHuman`.
+ */
+export type InputType = EventType | 'engage'
+
 export interface EventInput {
-  type: EventType
+  type: InputType
   path: string | null
   locale: string | null
   label: string | null
@@ -47,8 +53,8 @@ export function sanitizePath(input: unknown): string | null {
   return (normalized || '/').slice(0, MAX_PATH_LENGTH)
 }
 
-function labelFor(type: EventType, raw: unknown): string | null | false {
-  if (type === 'pageview') return null
+function labelFor(type: InputType, raw: unknown): string | null | false {
+  if (type === 'pageview' || type === 'engage') return null
 
   if (typeof raw !== 'string') return false
 
@@ -66,7 +72,12 @@ export function parseEventInput(body: unknown): EventInput | null {
 
   const raw = body as Record<string, unknown>
   const type = raw.type
-  if (type !== 'pageview' && type !== 'resume_download' && type !== 'contact_click') return null
+  if (
+    type !== 'pageview'
+    && type !== 'resume_download'
+    && type !== 'contact_click'
+    && type !== 'engage'
+  ) return null
 
   const path = sanitizePath(raw.path)
   if (!path) return null

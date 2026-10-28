@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto'
 import type { H3Event } from 'h3'
 import type { AnalyticsEvent } from './db'
-import { insertEvent, useAnalyticsDb } from './db'
+import { insertEvent, markHuman, useAnalyticsDb } from './db'
 import { lookupGeo } from './geo'
 import { normalizeReferrer, parseUtm } from './referrer'
 import type { EventInput } from './request'
@@ -42,6 +42,13 @@ export async function recordEvent(h3: H3Event, input: EventInput): Promise<void>
 
     if (!limiter.allow(visitor, now)) return
 
+    const db = useAnalyticsDb()
+
+    // A resume download or a contact click takes a click, so it proves the
+    // same thing an explicit engagement signal does.
+    if (input.type !== 'pageview') markHuman(db, visitor, now)
+    if (input.type === 'engage') return
+
     const ua = parseUserAgent(userAgent)
     const utm = parseUtm(`/${input.query ?? ''}`)
     const geo = ua.bot ? { country: null, city: null } : await lookupGeo(ip)
@@ -65,7 +72,7 @@ export async function recordEvent(h3: H3Event, input: EventInput): Promise<void>
       bot: ua.bot
     }
 
-    insertEvent(useAnalyticsDb(), event)
+    insertEvent(db, event)
 
     if (notifier.shouldNotify(event, now)) {
       // Intentionally not awaited: the visitor should not wait on Telegram.
