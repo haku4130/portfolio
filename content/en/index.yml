@@ -1,8 +1,8 @@
 seo:
-  title: 'Andrey Osipov – Python Backend Developer'
-  description: 'Portfolio of Andrey Osipov – a Python backend developer based in Belgrade. Experienced with Django, FastAPI, PostgreSQL, Redis, Docker and high-load systems.'
-title: "Hi, I'm Andrey Osipov – Python Backend Developer"
-description: "I build reliable backend services and web applications.\n3+ years of commercial experience with Django, FastAPI, PostgreSQL and Docker."
+  title: 'Andrey Osipov – AI Engineer & Python Backend Developer'
+  description: 'Portfolio of Andrey Osipov – an AI engineer and Python backend developer based in Belgrade. Production LLM agents on the Claude API, FastAPI, Django, PostgreSQL and high-load systems.'
+title: "Hi, I'm Andrey Osipov – AI Engineer & Python Backend Developer"
+description: "I build LLM agents and reliable backend services for production.\n3+ years of commercial experience with Python, FastAPI, Django and PostgreSQL."
 hero:
   links:
     - label: 'My projects'
@@ -12,13 +12,13 @@ hero:
 about:
   title: 'About me'
   description: |
-    Python backend developer with 3+ years of commercial experience. I specialize in Django/DRF and FastAPI, work with high-load systems, optimize queries and set up CI/CD.
+    AI engineer with a Python backend base and 3+ years of commercial experience. I built a Claude API support assistant that resolves up to 40% of user issues, AI agents on the Anthropic SDK and a PyTorch photo deduplication service. On the backend side I specialize in Django/DRF and FastAPI, work with high-load systems, optimize queries and set up CI/CD.
     On the side, I build full-cycle commercial websites – from architecture to deployment – with Nuxt and FastAPI.
 experience:
   title: Work experience
   items:
     - position: 'Python Developer'
-      date: '09.2025 – Present'
+      date: '09.2025 – 10.2026'
       summary: 'Services for Moscow transport-security systems: main service on Flask, newer services on FastAPI. Sensitive data under NDA.'
       details:
         - 'Designed and shipped an aggregated data model over a multi-terabyte MongoDB store (8.6B records), consolidated data from dozens of collections, cut time to retrieve a full object summary from 3.2s to 87ms and reduced database load by 37%.'
@@ -233,15 +233,15 @@ faq:
             It depends on the task. I reach for Django/DRF when I need a fast start with an admin panel, an ORM and a ready-made ecosystem – for example, products with a lot of CRUD and business logic. FastAPI – when async, speed and lightweight microservices with a clear API contract matter. At RUTUBE, by the way, both coexisted: a Django monolith and microservices on aiohttp/FastAPI. You pick the tool for the task, not the other way around.
         - label: You're a backend developer, but you also do frontend. How come?
           content: |
-            My main specialization is backend, and that's where I want to grow. But I can cover the full cycle: I built several commercial projects (ters.gallery, ZanityVPN and others) entirely on my own – the architecture, the backend on FastAPI/Django, the frontend on Nuxt, and deployment. For a business that's convenient: one person instead of three. For me it's an understanding of how the whole system works, not just my half of it.
+            My main specialization is AI engineering on a Python backend, and that's where I want to grow. But I can cover the full cycle: I built several commercial projects (ters.gallery, ZanityVPN and others) entirely on my own – the architecture, the backend on FastAPI/Django, the frontend on Nuxt, and deployment. For a business that's convenient: one person instead of three. For me it's an understanding of how the whole system works, not just my half of it.
         - label: Do you have experience with high-load systems?
           content: |
-            Yes. At RUTUBE – optimizing heavily loaded API endpoints, caching, queues on RabbitMQ and Kafka, background tasks on Celery. At the Innovation Center «Safe Transport» I work with systems holding terabytes of data in MongoDB: here it's essential to think about indexes, volumes and the cost of every query. Infrastructure-wise – Docker, Kubernetes, Nginx, CI/CD on GitHub Actions and GitLab CI.
+            Yes. At RUTUBE – optimizing heavily loaded API endpoints, caching, queues on RabbitMQ and Kafka, background tasks on Celery. At the Innovation Center «Safe Transport» I worked with systems holding terabytes of data in MongoDB: here it's essential to think about indexes, volumes and the cost of every query. Infrastructure-wise – Docker, Kubernetes, Nginx, CI/CD on GitHub Actions and GitLab CI.
     - title: Collaboration
       questions:
         - label: Are you open to job offers?
           content: |
-            Yes, I'm considering interesting backend positions – especially where there are challenging problems, high load and room to grow. I'm looking for fully remote work worldwide. Reach out on Telegram [@haku4130](https://t.me/haku4130) or by email at a.osipov.code@gmail.com – my resume is [on hh.ru](https://hh.ru/resume/c7218ed5ff0f69ec950039ed1f4a7233554461).
+            Yes, I'm considering AI engineering and Python backend positions – especially where there are challenging problems, LLM products and room to grow. I'm looking for fully remote work worldwide. Reach out on Telegram [@haku4130](https://t.me/haku4130) or by email at a.osipov.code@gmail.com – my resume is [on hh.ru](https://hh.ru/resume/c7218ed5ff0f69ec950039ed1f4a7233554461).
         - label: Do you take on website development projects?
           content: |
             Yes. I build turnkey commercial websites and web applications – from architecture design to deployment and support. Stack: Nuxt (Vue) on the frontend, FastAPI/Django + PostgreSQL on the backend, all in Docker. I can take a project on end to end or join an existing team on the backend.

@@ -1,6 +1,6 @@
 # Portfolio – Andrey Osipov
 
-Personal portfolio of a Python backend developer, live at **[aosipov.dev](https://aosipov.dev)**.
+Personal portfolio of an AI engineer and Python backend developer, live at **[aosipov.dev](https://aosipov.dev)**.
 Bilingual (Russian / English), content-driven, deployed as a Dockerized SSR app behind Traefik.
 
 ## Tech stack
