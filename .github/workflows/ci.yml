@@ -36,26 +36,53 @@ jobs:
       - name: Test
         run: pnpm run test
 
-  deploy:
+  image:
     needs: ci
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
+    # The server has too little memory for the Nuxt build, so the image is built here.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            haku4130/portfolio:latest
+            haku4130/portfolio:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: image
+    runs-on: ubuntu-latest
+
     # Skip gracefully until the SSH secret is configured
     env:
-      SSH_KEY: ${{ secrets.MSK3_SSH_KEY }}
+      SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
 
     steps:
-      - name: Deploy to msk3 over SSH
+      # The server key is restricted to /opt/portfolio/deploy.sh (pull + up),
+      # so the script below is ignored by the server.
+      - name: Deploy over SSH
         if: env.SSH_KEY != ''
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.MSK3_HOST }}
-          username: ${{ secrets.MSK3_USER }}
-          key: ${{ secrets.MSK3_SSH_KEY }}
-          command_timeout: 30m
-          script: |
-            set -e
-            cd ~/portfolio
-            git pull --ff-only origin main
-            docker compose up -d --build
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 10m
+          script: deploy

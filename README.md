@@ -102,11 +102,17 @@ Let's Encrypt.
 CI/CD ([GitHub Actions](.github/workflows/ci.yml)):
 
 1. On every push – run **lint**, **typecheck** and **tests**.
-2. On push to `main` – SSH into the server and redeploy:
-   `git pull && docker compose up -d --build`.
+2. On push to `main` – build the image in Actions and push it to Docker Hub
+   (`haku4130/portfolio:latest` and `:<sha>`); the server has too little memory
+   for the Nuxt build.
+3. Then SSH into the server with a key restricted to `deploy.sh`, which pulls
+   the image and restarts the container.
+
+Secrets: `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `DEPLOY_HOST`, `DEPLOY_USER`,
+`DEPLOY_SSH_KEY`.
 
 Manual deploy:
 
 ```bash
-ssh <server> 'cd ~/portfolio && git pull && docker compose up -d --build'
+ssh <server> 'cd /opt/portfolio && docker compose pull && docker compose up -d'
 ```
